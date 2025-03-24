@@ -1,0 +1,38 @@
+.album-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 24px;
+    justify-content: center;
+}
+
+.album-item {
+    display: flex;
+    flex-direction: row;
+    width: 280px;
+    height: 72px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--item-color);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.album-item img {
+    width: 56px;
+    height: 56px;
+    margin-right: 8px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.album-item .name {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    font-weight: 600;
+}

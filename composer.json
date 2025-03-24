@@ -1,0 +1,22 @@
+{
+    "name": "phong/magazine-website",
+    "description": "Magazine Website with PHP",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Phong\\MagazineWebsite\\": "src/",
+            "App\\": "app/",
+            "Core\\": "core/",
+            "Helper\\": "helper/"
+        }
+    },
+    "authors": [
+        {
+            "name": "phonghh.forlearning",
+            "email": "phonghh.forlearning@gmail.com"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "^4.7"
+    }
+}
