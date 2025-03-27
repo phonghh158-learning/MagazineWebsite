@@ -30,6 +30,10 @@
             return $this->repository->getById($id);
         }
 
+        public function create() {
+            require_once __DIR__ ."/../../views/pages/category/create.php";
+        }
+
         public function createCategory() {
             try {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -58,13 +62,17 @@
                     return $category;
                 }
             } catch(Exception $e) {
+                echo $_POST['action'];
                 error_log("Error: " . $e->getMessage());
                 return false;
             }
         }
 
         public function deleteCategory($id) {
-            return $this->repository->delete($id);
+            echo $_POST['action'];
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'delete') 
+                return $this->repository->delete($id);
+            return false;
         }
 
         public function softDeleteCategory($id) {

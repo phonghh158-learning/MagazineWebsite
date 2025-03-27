@@ -38,7 +38,7 @@
                         if (!empty($params)) {
                             $paramType = $params[0]->getType();
         
-                            if ($paramType && $paramType->getName() == "DateTime") {
+                            if ($paramType && $paramType->getName() == "DateTime" && $value !== null) {
                                 $value = new DateTime($value);
                             }
                         }

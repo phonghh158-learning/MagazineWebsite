@@ -5,6 +5,7 @@ namespace routes;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/controllers/HomeController.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
+require_once __DIR__ . '/../app/controllers/CategoryController.php';
 // require_once __DIR__ . '/../app/controllers/MagazinePostController.php';
 
 use App\controllers\HomeController;
@@ -30,6 +31,10 @@ Router::get('logout', [AuthController::class, 'logout']);
 //Category
 Router::get('category', [CategoryController::class,'index']);
 Router::get('category/show/{id}', [CategoryController::class,'show']);
+Router::post('category/show/{id}', [CategoryController::class,'updateCategory']);
+// Router::post('category/show/{id}', [CategoryController::class,'deleteCategory']);
+Router::get('category/create', [CategoryController::class,'create']);
+Router::post('category/create', [CategoryController::class,'createCategory']);
 
 //Magazine-Post
 // Router::get('magazine-post', [MagazinePostController::class, 'index']);

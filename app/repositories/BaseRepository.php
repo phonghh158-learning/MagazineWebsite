@@ -80,7 +80,11 @@
                 $keys = array_keys($data);
                 $setString = implode(', ', array_map(fn($key) => "{$key} = :{$key}", $keys));
                 $query = "UPDATE {$this->table} SET $setString WHERE id = :id";
+
+                echo $query . "<br>";
+                var_dump($data);
                 $stmt = $this->pdo->prepare($query);
+
                 return $stmt->execute($data);
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());

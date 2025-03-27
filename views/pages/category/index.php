@@ -6,12 +6,12 @@ $str = "";
 if (!empty($categories)) {
     foreach ($categories as $category) {
         $id = $category->getId();
-        $title = $category->getName();
+        $name = $category->getName();
         $icon = $category->getIcon();
         $str .= "<div class=\"item\">
-                    <a href=\"/category/show.php?id={$id}\">
+                    <a href=\"/category/show/{$id}\">
                         {$icon}
-                        <p>{$title}</p>
+                        <p>{$name}</p>
                     </a>
                 </div> ";
     }
@@ -21,7 +21,10 @@ $addStr = "";
 if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin') {
     $addStr = '
         <div class="section-button">
-            <a href="#"> Thêm danh mục</a>
+            <a href="/category/create">
+                <i class="bx bx-plus" style="margin: 4px 4px 0 0;"></i>
+                Thêm
+            </a>
         </div>';
 } 
 
