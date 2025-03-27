@@ -9,6 +9,7 @@ require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 use App\controllers\HomeController;
 use App\controllers\AuthController;
+use App\controllers\CategoryController;
 use App\controllers\MagazinePostController;
 use Core\Router;
 
@@ -25,6 +26,10 @@ Router::get('login', [AuthController::class, 'showLoginForm']);
 Router::post('login', [AuthController::class, 'login']);
 
 Router::get('logout', [AuthController::class, 'logout']);
+
+//Category
+Router::get('category', [CategoryController::class,'index']);
+Router::get('category/show/{id}', [CategoryController::class,'show']);
 
 //Magazine-Post
 // Router::get('magazine-post', [MagazinePostController::class, 'index']);

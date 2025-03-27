@@ -3,7 +3,7 @@
     namespace App\controllers;
 
     use App\repositories\CategoryRepository;
-use Exception;
+    use Exception;
 
     class CategoryController {
         private $repository;
@@ -12,8 +12,18 @@ use Exception;
             $this->repository = new CategoryRepository();
         }
 
+        public function index() {
+            $categories = $this->repository->getAll();
+            require_once __DIR__ . "/../../views/pages/category/index.php";
+        }
+
         public function getCategories() {
             return $this->repository->getAll();
+        }
+
+        public function show($id) {
+            $category = $this->repository->getById($id);
+            require_once __DIR__ ."/../../views/pages/category/show.php";
         }
 
         public function getCategory($id) {
