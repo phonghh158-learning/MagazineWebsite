@@ -2,13 +2,13 @@
 
     namespace Helper;
 
-use Exception;
+    use Exception;
 
     class FileProcess {
 
         public static function uploadImage($file, $dir, $name) {
             try {
-                $targetDir = "public/uploads/images/" . $dir; // Sửa lỗi đường dẫn tuyệt đối
+                $targetDir = "upload/images/" . $dir; // Sửa lỗi đường dẫn tuyệt đối
         
                 if (!is_dir($targetDir)) {
                     mkdir($targetDir, 0777, true); // Tạo thư mục nếu chưa có

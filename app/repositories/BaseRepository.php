@@ -77,12 +77,9 @@
                     return false;
                 }
                 
-                $keys = array_keys($data);
+                $keys = array_keys(array_filter($data, fn($key) => $key !== 'id', ARRAY_FILTER_USE_KEY));
                 $setString = implode(', ', array_map(fn($key) => "{$key} = :{$key}", $keys));
                 $query = "UPDATE {$this->table} SET $setString WHERE id = :id";
-
-                echo $query . "<br>";
-                var_dump($data);
                 $stmt = $this->pdo->prepare($query);
 
                 return $stmt->execute($data);

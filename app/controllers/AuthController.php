@@ -75,9 +75,11 @@
                     
                     $user = $this->repository->createUser($id, $username, $fullname, $email, $hashedPassword);
                     
-                    echo "Đăng ký thành công";
-
-                    return $user;
+                    if ($user) {
+                        header("Location: /login");
+                    } else {
+                        throw new Exception("Không thể đăng ký tài khoản!");
+                    }
                 }
             } catch (Exception $e) {
                 error_log("Error: " . $e->getMessage());
@@ -121,11 +123,9 @@
         
                         setcookie('remember_token', $token, time() + (7 * 24 * 60 * 60), "/", "", true, true);
                     }
-
-                    echo "Đăng nhập thành công!";
-                    echo "<br>" . $this->repository->getById($_SESSION['user_id'])->getUsername();
-
-                    return true;
+                    
+                    header("Location: /");
+                    exit();
                 }
             } catch (Exception $e) {
                 error_log("Error: " . $e->getMessage());
@@ -142,8 +142,10 @@
         
                 session_destroy(); // Xóa session
                 setcookie('remember_token', '', time() - 3600, "/", "", true, true);
-        
-                echo "Đã đăng xuất!";
+                
+                header("Location: /");
+                exit();
+                
             } catch (Exception $e) {
                 error_log("Error: " . $e->getMessage());
                 echo $e->getMessage();

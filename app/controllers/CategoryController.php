@@ -43,7 +43,12 @@
 
                     $category = $this->repository->createCategory($name, $description, $icon);
                     
-                    return $category;
+                    if ($category) {
+                        header("Location: /category");
+                        exit();
+                    } else {
+                        return false;
+                    }
                 }
             } catch(Exception $e) {
                 error_log("Error: " . $e->getMessage());
@@ -53,26 +58,36 @@
 
         public function updateCategory($id) {
             try {
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'update') {
                     $name = trim($_POST['name'] ?? '');
                     $description = trim($_POST['description'] ?? '');
                     $icon = trim($_POST['icon'] ?? '');
 
                     $category = $this->repository->updateCategory($id, $name, $description, $icon);
-                    return $category;
-                }
+
+                    if ($category) {
+                        header("Location: /category");
+                        exit();
+                    } else {
+                        return false;
+                    }
+                } 
             } catch(Exception $e) {
-                echo $_POST['action'];
                 error_log("Error: " . $e->getMessage());
                 return false;
             }
         }
 
         public function deleteCategory($id) {
-            echo $_POST['action'];
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'delete') 
-                return $this->repository->delete($id);
-            return false;
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'delete') {
+                $deleteStatus = $this->repository->delete($id);
+                if ($deleteStatus) {
+                    header("Location: /category");
+                    exit();
+                } else {
+                    return false;
+                }
+            }
         }
 
         public function softDeleteCategory($id) {

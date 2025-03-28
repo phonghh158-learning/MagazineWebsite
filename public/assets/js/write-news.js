@@ -37,32 +37,27 @@ function setVisibilityDeleteButton(paraNumber) {
 
 function createParagraph(paraNumber) {
     let paragraph = document.createElement('div');
-    let paragraphImage = document.createElement('input');
     let paragraphTitle = document.createElement('input');
     let paragraphContent = document.createElement('textarea');
 
     paragraph.classList.add('paragraph');
     paragraph.id = 'paragraph-' + paraNumber;
 
-    paragraphImage.classList.add('paragraph-image');
-    paragraphImage.setAttribute('type', 'file');
-    paragraphImage.setAttribute('name', 'paragraph-image');
-    paragraphImage.setAttribute('accept', 'image/*');
-
     paragraphTitle.classList.add('paragraph-title');
     paragraphTitle.setAttribute('type', 'text');
-    paragraphTitle.setAttribute('name', 'title');
-    paragraphTitle.setAttribute('id', 'title');
+    paragraphTitle.setAttribute('name', 'paragraph_title[]');
+    paragraphTitle.setAttribute('id', 'paragraph-title');
     paragraphTitle.setAttribute('placeholder', 'Tiêu đề đoạn văn');
+    paragraphTitle.setAttribute('required', '');
 
     paragraphContent.classList.add('paragraph-content');
-    paragraphContent.setAttribute('name', 'paragraph-content');
+    paragraphContent.setAttribute('name', 'paragraph_content[]');
     paragraphContent.setAttribute('id', 'paragraph-content');
     paragraphContent.setAttribute('cols', '30');
     paragraphContent.setAttribute('rows', '10');
     paragraphContent.setAttribute('placeholder', 'Nội dung đoạn văn');
+    paragraphContent.setAttribute('required', '');
 
-    paragraph.appendChild(paragraphImage);
     paragraph.appendChild(paragraphTitle);
     paragraph.appendChild(paragraphContent);
 

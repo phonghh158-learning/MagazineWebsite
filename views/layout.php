@@ -8,7 +8,8 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title><?= $title ?? 'Music Magazine' ?></title>
 </head>
-<body class="dark">
+<?php $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : ''; ?>
+<body <?php echo "class=" . $theme ?>>
     <?php include __DIR__ . '/partials/navigation.php'; ?>
     <div class="container">
         <?php include __DIR__ . '/partials/header.php'; ?>

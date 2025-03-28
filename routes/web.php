@@ -6,12 +6,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../app/controllers/HomeController.php';
 require_once __DIR__ . '/../app/controllers/AuthController.php';
 require_once __DIR__ . '/../app/controllers/CategoryController.php';
-// require_once __DIR__ . '/../app/controllers/MagazinePostController.php';
+require_once __DIR__ . '/../app/controllers/PostController.php';
 
 use App\controllers\HomeController;
 use App\controllers\AuthController;
 use App\controllers\CategoryController;
-use App\controllers\MagazinePostController;
+use App\controllers\PostController;
 use Core\Router;
 
 //TEST
@@ -32,18 +32,16 @@ Router::get('logout', [AuthController::class, 'logout']);
 Router::get('category', [CategoryController::class,'index']);
 Router::get('category/show/{id}', [CategoryController::class,'show']);
 Router::post('category/show/{id}', [CategoryController::class,'updateCategory']);
-// Router::post('category/show/{id}', [CategoryController::class,'deleteCategory']);
+Router::post('category/show/{id}', [CategoryController::class,'deleteCategory']);
 Router::get('category/create', [CategoryController::class,'create']);
 Router::post('category/create', [CategoryController::class,'createCategory']);
 
 //Magazine-Post
-// Router::get('magazine-post', [MagazinePostController::class, 'index']);
-// Router::get('magazine-post/show/{id}', [MagazinePostController::class, 'show']);
+Router::get('news', [PostController::class,'index']);
+// Router::get('magazine-post/show/{id}', [PostController::class,'show']);
+// Router::post('magazine-post/show/{id}', [PostController::class,'updatePost']);
+// Router::post('magazine-post/show/{id}', [PostController::class,'deletePost']);
+Router::get('news/create', [PostController::class,'create']);
+Router::post('news/create', [PostController::class,'createPost']);
 
-// Router::get('magazine-post/create', [MagazinePostController::class, 'create']);
-// Router::post('magazine-post/create', [MagazinePostController::class, 'create']);
 
-// Router::get('magazine-post/update/{id}', [MagazinePostController::class, 'update']);
-// Router::post('magazine-post/update/{id}', [MagazinePostController::class, 'update']);
-
-// Router::get('magazine-post/delete/{id}', [MagazinePostController::class, 'delete']);

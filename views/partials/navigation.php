@@ -14,7 +14,7 @@
             if (isset($_SESSION['user_id'])) {
                 echo "
                 <li>
-                    <a href=\"/magazine-post/create\" class=\"nav-link\">
+                    <a href=\"/news/create\" class=\"nav-link\">
                         <i class='bx bx-pen'></i>
                     </a>
                 </li>

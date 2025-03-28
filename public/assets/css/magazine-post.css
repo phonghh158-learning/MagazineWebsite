@@ -27,7 +27,7 @@
     color: var(--text-color);
 }
 
-.magazine-post .main-image {
+.magazine-post .thumbnail {
     width: 100%;
     height: 224px;
     margin-bottom: 16px;
@@ -105,7 +105,7 @@
 }
 
 /* WRITE POST FORM */
-.write-post-form .main-image {
+.write-post-form .thumbnail {
     display: flex;
     width: 100%;
     height: 224px;
@@ -113,7 +113,7 @@
     justify-content: center;
     align-items: center;
 }
-.write-post-form .main-image::before {
+.write-post-form .thumbnail::before {
     content: 'Select Image';
     position: absolute;
     top: 100px;
@@ -128,7 +128,7 @@
     font-size: 1.5rem;
     font-weight: 500;
 }
-.write-post-form .main-image::-webkit-file-upload-button {
+.write-post-form .thumbnail::-webkit-file-upload-button {
     visibility: hidden;
 }
 
@@ -194,18 +194,10 @@
     margin-top: 0px;
 }
 
-.write-post-form .content .paragraph .paragraph-image {
-    width: 100%;
-    height: 24px;
-}
-.write-post-form .content .paragraph .paragraph-image::before {
-    content: "Chọn hình ảnh: ";
-}
-
 .write-post-form .content .paragraph .paragraph-title {
     width: 100%;
     height: 48px;
-    margin: 8px 0;
+    margin-bottom: 8px;
     padding: 8px;
     background-color: transparent;
     border: 1px dashed var(--accent-color);

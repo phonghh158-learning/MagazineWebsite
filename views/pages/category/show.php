@@ -21,7 +21,7 @@ $content = '
                         <p id="title">Danh mục - Xem</p>
                     </div>
                     <form class="crud" action="/category/show/' . $id . '" method="POST">
-                        <input type="text" name="action" id="action">
+                        <input type="text" name="action" id="action" hidden>
                         <input type="text" name="id" id="id" value="' . $id . '" hidden disabled>
 
                         <label for="name" id="lbl-name">Name</label>
