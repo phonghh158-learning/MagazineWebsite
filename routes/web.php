@@ -36,11 +36,11 @@ Router::post('category/show/{id}', [CategoryController::class,'deleteCategory'])
 Router::get('category/create', [CategoryController::class,'create']);
 Router::post('category/create', [CategoryController::class,'createCategory']);
 
-//Magazine-Post
+//News
 Router::get('news', [PostController::class,'index']);
-// Router::get('magazine-post/show/{id}', [PostController::class,'show']);
-// Router::post('magazine-post/show/{id}', [PostController::class,'updatePost']);
-// Router::post('magazine-post/show/{id}', [PostController::class,'deletePost']);
+Router::get('news/show/{id}', [PostController::class,'show']);
+// Router::post('news/show/{id}', [PostController::class,'updatePost']);
+// Router::post('news/show/{id}', [PostController::class,'deletePost']);
 Router::get('news/create', [PostController::class,'create']);
 Router::post('news/create', [PostController::class,'createPost']);
 

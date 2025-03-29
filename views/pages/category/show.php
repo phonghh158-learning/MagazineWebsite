@@ -54,6 +54,11 @@ $content = '
                     </form>
 
                     <div class="function">
+                        <div class="function-item" id="fn-show">
+                            <i class=\'bx bx-show\'></i>
+                            <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
+                            <p>Xem</p>
+                        </div>
                         <div class="function-item" id="fn-update">
                             <i class=\'bx bx-edit\'></i>
                             <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>

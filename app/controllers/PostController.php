@@ -23,12 +23,18 @@
         public function index() {
             $posts = $this->repository->getAll();
             $categories = $this->categoryRepository->getAll();
-            $author = $this->userRepository->getById($_SESSION['user_id']);
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
         public function getPosts() {
-            return $this->repository->getAll();
+            return $this->repository->getPostByStatus('public');
+        }
+
+        public function show($id) {
+            $post = $this->repository->getById($id);
+            $category = $this->categoryRepository->getById($post->getCategoryId());
+            $author = $this->userRepository->getById($post->getAuthorId());
+            require_once __DIR__ . '/../../views/pages/news/show.php';
         }
 
         public function getPost($id) {
@@ -84,82 +90,22 @@
                     }
         
                     if (!empty($errorText)) {
-                        var_dump($errorText);
+                        return $errorText;
                     }
         
                     // Kiểm tra kết quả insert vào DB
                     $post = $this->repository->createPost($id, $title, $thumbnail, $content, $status, $categoryId, $authorId);
                     if (!$post) {
-                        echo "Không thể tạo bài viết! Kiểm tra repository.";
+                        throw new Exception("Không thể tạo bài viết! Kiểm tra repository.");
                     }
         
-                    header("Location: /news/create");
+                    header("Location: /news");
                 }
             } catch (Exception $e) {
                 echo "Lỗi hệ thống, vui lòng thử lại sau.";
                 error_log("Lỗi createPost: " . $e->getMessage());
             }
         }
-
-        // public function createPost() {
-        //     try {
-        //         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['thumbnail'])) {
-        //             $id = Uuid::uuid4()->toString();
-        //             $title = trim($_POST['title']) ?? '';
-        //             $paragraphTitles = $_POST['paragraph_title'] ?? '';
-        //             $paragraphContents = $_POST['paragraph_content'] ?? '';
-        //             $status = 'pending';
-        //             $categoryId = trim($_POST['category_id']) ?? '';
-        //             $authorId = trim($_POST['author_id']) ?? '';
-        
-        //             $errorText = [];
-        
-        //             $content = '';
-        
-        //             for ($i = 0; $i < count($paragraphTitles); $i++) {
-        //                 $content .= '
-        //                     <div class="paragraph" id="paragraph-' . ($i + 1) . '">
-        //                         <p class="paragraph-title">
-        //                             ' . htmlspecialchars($paragraphTitles[$i]) . '
-        //                         </p>
-        //                         <p class="paragraph-content">
-        //                             ' . htmlspecialchars($paragraphContents[$i]) . '
-        //                         </p>
-        //                     </div>
-        //                 ';
-        //             }
-        
-        //             if (empty($title) || empty($content) || empty($categoryId) || empty($authorId)) {
-        //                 $errorText[] = "Vui lòng nhập đầy đủ thông tin!";
-        //             }
-        
-        //             $thumbnail = null;
-        //             if (!empty($_FILES['thumbnail']['name'])) {
-        //                 $thumbnail = FileProcess::uploadImage($_FILES['thumbnail'], 'news', $id);
-        //                 if (!$thumbnail) {
-        //                     $errorText[] = "Lỗi khi tải ảnh lên!";
-        //                 }
-        //             } else {
-        //                 $errorText[] = "Vui lòng chọn hình ảnh!";
-        //             }
-        
-        //             if (!empty($errorText)) {
-        //                 return $errorText;
-        //             }
-        
-        //             // Kiểm tra kết quả insert vào DB
-        //             $post = $this->repository->createPost($id, $title, $content, $status, $thumbnail, $categoryId, $authorId);
-        //             if (!$post) {
-        //                 throw new Exception("Không thể tạo bài viết! Kiểm tra repository.");
-        //             }
-        
-        //             return $post;
-        //         }
-        //     } catch (Exception $e) {
-        //         error_log("Lỗi createPost: " . $e->getMessage());
-        //         throw new Exception("Lỗi hệ thống, vui lòng thử lại sau.");
-        //     }
-        // }
 
         public function updatePost($id) {
             try {

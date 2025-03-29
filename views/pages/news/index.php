@@ -1,5 +1,7 @@
 <?php
 
+use Helper\DateTimeAsia;
+
 $title = "Bài báo";
 $css = '/assets/css/magazine-list.css';
 
@@ -12,6 +14,34 @@ foreach ($categories as $category) {
         <div class="item">
             <a href="#">
                 ' . $categoryIcon . $categoryName . '
+            </a>
+        </div>
+    ';
+    if ($category->getId() == $post->getCategoryId()) {
+        $postCategory = $category->getName();
+    }
+}
+
+$newsListHTML = '';
+foreach ($posts as $post) {
+    $newsListHTML .= '
+        <div class="item">
+            <a href="#">
+                <img src="/'. $post->getThumbnail() .'" alt="">
+                <br />
+                <div class="news-category">
+                    <p> ' . $postCategory . ' </p>
+                </div>
+                <div class="news-title">
+                    <p> ' . $post->getTitle() . ' </p>
+                </div>
+                <div class="news-about">
+                    <p class="news-date"> ' . DateTimeAsia::toUTC7($post->getCreatedAt()) . ' </p>
+                    <a href="#" class="news-author">
+                        Xem thêm
+                        <i class=\'bx bx-right-arrow-alt\'></i>
+                    </a>
+                </div>
             </a>
         </div>
     ';
@@ -33,7 +63,7 @@ $content = '
                     </section>
                     <br><br>
                     <section id="news">
-                        <div class="magazine-posts" href="/album.html">
+                        <div class="magazine-posts">
                             <div class="item">
                                 <a href="#">
                                     <img src="images/home/5b63853da93f72554033ef2c52748378.jpg" alt="">
@@ -46,11 +76,6 @@ $content = '
                                     <div class="news-title">
                                         <p>
                                             Tên bản tin
-                                        </p>
-                                    </div>
-                                    <div class="news-content">
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar ac odio in aliquet.
                                         </p>
                                     </div>
                                     <div class="news-about">

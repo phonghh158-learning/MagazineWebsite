@@ -1,5 +1,6 @@
 const fnUpdate = document.getElementById('fn-update');
 const fnDelete = document.getElementById('fn-delete');
+const fnShow = document.getElementById('fn-show');
 const action = document.getElementById('action');
 
 fnUpdate.addEventListener('click', () => {
@@ -15,6 +16,8 @@ fnUpdate.addEventListener('click', () => {
     document.getElementById('description').removeAttribute('disabled');
 
     document.getElementById('message').innerText = 'Bạn có chắc chắn sẽ thay đổi như vậy không?';
+
+    fnUpdate.disabled = true;
 
     loadIcon();
     showFormButton();
@@ -37,6 +40,10 @@ fnDelete.addEventListener('click', () => {
     document.getElementById('message').innerText = 'Bạn chắc chắn muốn xóa danh mục này?';
 
     showFormButton();
+});
+
+fnShow.addEventListener('click', () => {
+    location.reload();
 });
 
 function showFormButton() {

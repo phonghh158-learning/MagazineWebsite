@@ -189,7 +189,7 @@
 .function .function-item {
     display: flex;
     flex-direction: row;
-    width: 48%;
+    width: 30%;
     height: 48px;
     border: 1px solid var(--accent-color);
     background-color: var(--primary-color);
