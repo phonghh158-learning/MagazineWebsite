@@ -2,8 +2,8 @@
 
     namespace App\repositories;
 
+    use App\entities\ReviewEntity;
     use App\repositories\BaseRepository;
-    use App\models\ReviewModel;
     use Helper\DateTimeAsia;
     use Ramsey\Uuid\Nonstandard\Uuid;
     use Core\Mapper;
@@ -12,11 +12,11 @@
 
     class ReviewRepository extends BaseRepository {
         public function __construct() {
-            parent::__construct('reviews', ReviewModel::class);
+            parent::__construct('reviews', ReviewEntity::class);
         }
 
         public function createReview($postId, $userId, $rating, $comment) {
-            $entity = new ReviewModel(Uuid::uuid4()->toString(), $postId, $userId, $rating, $comment, 
+            $entity = new ReviewEntity(Uuid::uuid4()->toString(), $postId, $userId, $rating, $comment, 
             DateTimeAsia::now(), DateTimeAsia::now(), null);
 
             return parent::create($entity);

@@ -2,31 +2,32 @@
 
     namespace App\repositories;
 
+    use App\entities\PostEntity;
     use App\repositories\BaseRepository;
-    use App\models\PostModel;
     use Core\Mapper;
     use Helper\DateTimeAsia;
     use PDO;
     use PDOException;
-    use Ramsey\Uuid\Nonstandard\Uuid;
 
     class PostRepository extends BaseRepository {
         public function __construct() {
-            parent::__construct('magazine_posts', PostModel::class);
+            parent::__construct('magazine_posts', PostEntity::class);
         }
 
-        public function createPost($id, $title, $thumbnail, $content, $status, $categoryId, $authorId) {
-            $entity = new PostModel(
-                $id, $title, $thumbnail, $content, $status,
-                 $categoryId, $authorId, DateTimeAsia::now(), DateTimeAsia::now(), null);
+        public function createPost($id, $title, $thumbnail, $paragraphs, $status, $categoryId, $authorId) {
+            $entity = new PostEntity(
+                $id, $title, $thumbnail, $paragraphs, 
+                $status, $categoryId, $authorId, 
+                DateTimeAsia::now(), DateTimeAsia::now(), null);
 
             return parent::create($entity);
         }
 
-        public function updatePost($id, $title, $thumbnail, $content, $status, $categoryId, $authorId) {
-            $entity = new PostModel(
-                $id, $title, $thumbnail, $content, $status,
-                 $categoryId, $authorId, DateTimeAsia::now(), DateTimeAsia::now(), null);
+        public function updatePost($id, $title, $thumbnail, $paragraphs, $status, $categoryId, $authorId) {
+            $entity = new PostEntity(
+                $id, $title, $thumbnail, $paragraphs,
+                $status, $categoryId, $authorId, 
+                DateTimeAsia::now(), DateTimeAsia::now(), null);
 
             return parent::update($entity);
         }

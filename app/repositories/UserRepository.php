@@ -2,8 +2,8 @@
 
     namespace App\repositories;
 
+    use App\entities\UserEntity;
     use App\repositories\BaseRepository;
-    use App\models\UserModel;
     use Core\Mapper;
     use Helper\DateTimeAsia;
     use PDO;
@@ -11,16 +11,16 @@
 
     class UserRepository extends BaseRepository {
         public function __construct() {
-            parent::__construct('users', UserModel::class);
+            parent::__construct('users', UserEntity::class);
         }
 
         public function createUser($id, $username, $fullname, $email, $password) {
-            $entity = new UserModel($id, $username, $fullname, $email, null, $password, 'user', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
+            $entity = new UserEntity($id, $username, $fullname, $email, null, $password, 'user', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
             return parent::create($entity);
         }
 
         public function createAdmin($id, $username, $fullname, $email, $password) {
-            $entity = new UserModel($id, $username, $fullname, $email, null, $password, 'admin', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
+            $entity = new UserEntity($id, $username, $fullname, $email, null, $password, 'admin', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
             return parent::create($entity);
         }
 
@@ -32,7 +32,7 @@
 
                 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                return $data ? Mapper::DataToEntity(UserModel::class, $data) : null;
+                return $data ? Mapper::DataToEntity(UserEntity::class, $data) : null;
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());
                 throw $e;
@@ -60,7 +60,7 @@
 
                 $data = $stmt->fetch(PDO::FETCH_ASSOC); 
 
-                return $data ? Mapper::DataToEntity(UserModel::class, $data) : null;
+                return $data ? Mapper::DataToEntity(UserEntity::class, $data) : null;
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());
                 throw $e;

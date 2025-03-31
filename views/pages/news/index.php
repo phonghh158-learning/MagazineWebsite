@@ -17,10 +17,14 @@ foreach ($categories as $category) {
             </a>
         </div>
     ';
-    if ($category->getId() == $post->getCategoryId()) {
-        $postCategory = $category->getName();
-    }
+    // if ($category->getId() == $post->getCategoryId()) {
+    //     $postCategory = $category->getName();
+    // }
 }
+
+// echo $post->getCategoryId();
+
+$postCategory = '';
 
 $newsListHTML = '';
 foreach ($posts as $post) {

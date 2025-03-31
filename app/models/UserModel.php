@@ -1,74 +1,105 @@
 <?php
 
-    namespace App\models;
+namespace App\models;
 
-    use DateTime;
+use App\repositories\UserRepository;
+use Ramsey\Uuid\Uuid;
+use Exception;
 
-    class UserModel {
-        private string $id;
-        private string $username;
-        private string $fullname;
-        private string $email;
-        private ?DateTime $emailVerifiedAt;
-        private string $password;
-        private string $role;
-        private ?string $avatar;
-        private ?string $bio;
-        private string $status;
-        private ?string $rememberToken;
-        private DateTime $createdAt;
-        private DateTime $updatedAt;
-        private ?DateTime $deletedAt;
-        
-        public function __construct($id, $username, $fullname, $email, $emailVerifiedAt, $password, $role, $avatar, $bio, $status, $rememberToken, $createdAt, $updatedAt, $deletedAt) {
-            $this->id = $id;
-            $this->username = $username;
-            $this->fullname = $fullname;
-            $this->email = $email;
-            $this->emailVerifiedAt = $emailVerifiedAt;
-            $this->password = $password;
-            $this->role = $role;
-            $this->avatar = $avatar;
-            $this->bio = $bio;
-            $this->status = $status;
-            $this->rememberToken = $rememberToken;
-            $this->createdAt = $createdAt;
-            $this->updatedAt = $updatedAt;
-            $this->deletedAt = $deletedAt;
-        }
+class UserModel {
+    private $repository;
 
-        // Getters
-        public function getId(): string { return $this->id; }
-        public function getUsername(): string { return $this->username; }
-        public function getFullname(): string { return $this->fullname; }
-        public function getEmail(): string { return $this->email; }
-        public function getEmailVerifiedAt(): ?DateTime { return $this->emailVerifiedAt; }
-        public function getPassword(): string { return $this->password; }
-        public function getRole(): string { return $this->role; }
-        public function getAvatar(): ?string { return $this->avatar; }
-        public function getBio(): ?string { return $this->bio; }
-        public function getStatus(): string { return $this->status; }
-        public function getRememberToken(): ?string { return $this->rememberToken; }
-        public function getCreatedAt(): DateTime { return $this->createdAt; }
-        public function getUpdatedAt(): DateTime { return $this->updatedAt; }
-        public function getDeletedAt(): ?DateTime { return $this->deletedAt; }
-    
-        // Setters
-        public function setId(string $id): void { $this->id = $id; }
-        public function setUsername(string $username): void { $this->username = $username; }
-        public function setFullname(string $fullname): void { $this->fullname = $fullname; }
-        public function setEmail(string $email): void { $this->email = $email; }
-        public function setEmailVerifiedAt(?DateTime $emailVerifiedAt): void { $this->emailVerifiedAt = $emailVerifiedAt; }
-        public function setPassword(string $password): void { $this->password = $password; }
-        public function setRole(string $role): void { $this->role = $role; }
-        public function setAvatar(?string $avatar): void { $this->avatar = $avatar; }
-        public function setBio(?string $bio): void { $this->bio = $bio; }
-        public function setStatus(string $status): void { $this->status = $status; }
-        public function setRememberToken(?string $rememberToken): void { $this->rememberToken = $rememberToken; }
-        public function setCreatedAt(DateTime $createdAt): void { $this->createdAt = $createdAt; }
-        public function setUpdatedAt(DateTime $updatedAt): void { $this->updatedAt = $updatedAt; }
-        public function setDeletedAt(?DateTime $deletedAt): void { $this->deletedAt = $deletedAt; }
-    
+    public function __construct() {
+        $this->repository = new UserRepository();
     }
 
-?>
+    //Authentication
+
+    private function validateUserData(array $data) {
+        $errorText = [];
+
+        if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
+            $errorText[] = "Vui lòng nhập đầy đủ thông tin!";
+        }
+        
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errorText[] = "Email không hợp lệ!";
+        }
+        
+        if ($this->repository->getUserByEmail($data['email'])) {
+            $errorText[] = "Email đã được sử dụng!";
+        }
+        
+        if ($data['password'] !== $data['confirm_password']) {
+            $errorText[] = "Mật khẩu nhập lại không khớp!";
+        }
+        
+        if (!empty($errorText)) {
+            throw new Exception(implode("\n", $errorText));
+        }
+    }
+
+    public function registerUser(array $data) {
+        $this->validateUserData($data);
+        
+        $hashedPassword = password_hash($data['password'], PASSWORD_ARGON2ID);
+        
+        return $this->repository->createUser(
+            $data['id'], $data['username'], $data['fullname'], $data['email'], $hashedPassword
+        );
+    }
+
+    public function loginUser(array $credentials) {
+        $user = $this->repository->getUserByEmail($credentials['email']);
+        if (!$user || !password_verify($credentials['password'], $user->getPassword())) {
+            throw new Exception("Email hoặc mật khẩu không chính xác!");
+        }
+        
+        $_SESSION['user_id'] = $user->getId();
+        $_SESSION['user_role'] = $user->getRole();
+
+        if ($credentials['remember_me']) {
+            $config = require_once __DIR__ . '/../../config/app.php';
+            $token = bin2hex(random_bytes(32));
+            $hashedToken = hash_hmac('sha256', $token, $config['secret_key_256']);
+            
+            while ($this->repository->isTokenExist($hashedToken)) {
+                $token = bin2hex(random_bytes(32));
+                $hashedToken = hash_hmac('sha256', $token, $config['secret_key_256']);
+            }
+            
+            $this->repository->updateRememberToken($user->getId(), $hashedToken);
+            setcookie('remember_token', $token, time() + (7 * 24 * 60 * 60), "/", "", true, true);
+        }
+
+        return $user;
+    }
+
+    public function logoutUser() {
+        if (isset($_SESSION['user_id'])) {
+            $this->repository->updateRememberToken($_SESSION['user_id'], "");
+        }
+        session_destroy();
+        setcookie('remember_token', '', time() - 3600, "/", "", true, true);
+    }
+
+    public function autoLoginUser() {
+        if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
+            $config = require_once __DIR__ . '/../../config/app.php';
+            $hashedToken = hash_hmac('sha256', $_COOKIE['remember_token'], $config['secret_key_256']);
+            $user = $this->repository->getUserByRememberToken($hashedToken);
+
+            if ($user) {
+                $_SESSION['user_id'] = $user->getId();
+            } else {
+                setcookie('remember_token', '', time() - 3600, "/", "", true, true);
+                throw new Exception("Không tìm thấy người dùng với token đã lưu.");
+            }
+        }
+    }
+
+    // GET SET NORMAL
+    public function getUserById($id) {
+        return $this->repository->getById($id);
+    }
+}

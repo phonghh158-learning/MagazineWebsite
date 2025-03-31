@@ -6,8 +6,7 @@
     use Core\Mapper;
     use PDO;
     use PDOException;
-    use DateTime;
-    use DateTimeZone;
+    use Helper\DateTimeAsia;
 
     abstract class BaseRepository {
         protected $pdo;
@@ -107,8 +106,7 @@
                 $query = "UPDATE {$this->table} SET deleted_at = :deleted_at WHERE id = :id";
                 $stmt = $this->pdo->prepare($query);
                 
-                $now = new DateTime('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
-                $now = $now->format('Y-m-d H:i:s');
+                $now = DateTimeAsia::now();
                 
                 return $stmt->execute(["id" => $id, "deleted_at" => $now]);
             } catch (PDOException $e) {
