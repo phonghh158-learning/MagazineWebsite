@@ -10,6 +10,7 @@ use App\viewmodels\PostViewModel;
 use Core\Mapper;
 use Helper\DateTimeAsia;
 use Exception;
+use Helper\Caculate;
 use Ramsey\Uuid\Uuid;
 
 class PostModel {
@@ -46,14 +47,28 @@ class PostModel {
         );
     }
 
-    public function getAllPosts() {
+    public function getAllPosts(): array {
         $posts = $this->postRepository->getAll();
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+    public function getAllPostsPaginate($limit, $offset, $currentPage) {
+        $posts = $this->postRepository->getAllPaginate($limit, $offset);
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
     public function getPostById($id) {
         $post = $this->postRepository->getById($id);
         return $post ? $this->mapToViewModel($post) : null;
+    }
+
+    public function getPostsByCategory($categoryId) {
+        $posts = $this->postRepository->getPostsByCategory($categoryId);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    public function getPostsByCategoryPaginate($categoryId, $limit, $offset, $currentPage) {
+        $posts = $this->postRepository->getPostsByCategoryPaginate($categoryId, $limit, $offset);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
     public function createPost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $categoryId, $authorId) {

@@ -20,7 +20,6 @@
 .magazine-post .magazine-title {
     width: 100%;
     height: max-content;
-
     font-family: var(--title-font);
     font-weight: 700;
     font-size: 2.5rem;
@@ -29,7 +28,7 @@
 
 .magazine-post .thumbnail {
     width: 100%;
-    height: 224px;
+    height: auto;
     margin-bottom: 16px;
     border-radius: 8px;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -152,10 +151,14 @@
     position: relative;
     display: flex;
     width: 100%;
-    height: 224px;
+    height: 320px;
     border: 2px dashed var(--accent-color);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     justify-content: center;
     align-items: center;
+    transition: all 1.1s ease;
 }
 .write-post-form .thumbnail::before {
     content: 'Select Image';

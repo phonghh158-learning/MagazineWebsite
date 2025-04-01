@@ -63,3 +63,32 @@ function createParagraph(paraNumber) {
 
     return paragraph;
 }
+
+const thumbnailInput = document.getElementById("thumbnail");
+const currentThumbnail = thumbnailInput.style.backgroundImage ?? null;
+
+thumbnailInput.addEventListener("change", function () {
+    if (thumbnailInput.files.length > 0) {
+        const file = thumbnailInput.files[0];
+        const fileURL = URL.createObjectURL(file);
+
+        const allowedExtensions = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedExtensions.includes(file.type)) {
+            alert('Chỉ chấp nhận file PNG, JPG, hoặc JPEG!');
+            thumbnailInput.value = '';
+            thumbnailInput.style.backgroundImage = currentThumbnail;
+        } else {
+            // Cập nhật hình nền
+            thumbnailInput.style.backgroundImage = `url(${fileURL})`;
+        }
+
+        if (file.size > 4 * 1024 * 1024) { // 4MB
+            alert("File quá lớn! Chỉ chấp nhận file tối đa 4MB.");
+            thumbnailInput.value = "";
+            thumbnailInput.style.backgroundImage = currentThumbnail;
+        }
+    } else {
+        // Cập nhật hình nền
+        thumbnailInput.style.backgroundImage = currentThumbnail;
+    }
+});

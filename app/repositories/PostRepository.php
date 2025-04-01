@@ -32,11 +32,25 @@
             return parent::update($entity);
         }
 
-        public function getPostByCategory($categoryId) {
+        public function getPostsByCategory($categoryId) {
             try {
-                $query = "SELECT * FROM {$this->table} WHERE category_id = :category_id AND deleted_at IS NULL";
+                $query = "SELECT * FROM {$this->table} WHERE category_id = :category_id AND status = 'public' AND deleted_at IS NULL";
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['category_id' => $categoryId]);
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        public function getPostsByCategoryPaginate($categoryId, $limit, $offset) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE category_id = :category_id AND status = 'public' AND deleted_at IS NULL ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute(['category_id' => $categoryId, 'limit' => $limit, 'offset' => $offset]);
                 
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);

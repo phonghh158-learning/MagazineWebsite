@@ -22,8 +22,24 @@
         // GET ALL ITEM
         public function getAll() {
             try {
-                $query = "SELECT * FROM {$this->table} WHERE deleted_at IS NULL";
+                $query = "SELECT * FROM {$this->table} WHERE deleted_at IS NULL ORDER BY created_at DESC";
                 $stmt = $this->pdo->prepare($query);
+                $stmt->execute();
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        public function getAllPaginate($limit, $offset) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE deleted_at IS NULL ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
                 $stmt->execute();
                 
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

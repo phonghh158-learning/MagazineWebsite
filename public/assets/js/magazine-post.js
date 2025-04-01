@@ -59,10 +59,3 @@ function confirmDelete() {
     alert("Bài viết đã bị xóa!");
     closeModal();
 }
-
-// const thumbnailInput = document.getElementById('thumbnail');
-// thumbnailInput.addEventListener('click', () => { 
-//     if (thumbnailInput.files.length > 0) {
-//         alert("Tệp đã được chọn: " + fileInput.files[0].name);
-//     }
-// })

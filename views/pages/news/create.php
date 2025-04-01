@@ -15,7 +15,7 @@ foreach ($categories as $category) {
 
 $content = '
     <form class="write-post-form" action="/news/create" method="POST" enctype="multipart/form-data">
-        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept=".jpg, .jpeg, .png" required>
         <select name="category_id" id="category" class="category" required>
             <option value="" disabled selected>Chọn danh mục</option>
             ' .$categoryOptions. '
@@ -27,7 +27,7 @@ $content = '
                 Tác giả: ' . $author->getFullname() . '
             </p>
             <p class="date">
-                Ngày đăng: '. DateTimeAsia::now()->format('Y-m-d') . '
+                Ngày đăng: '. DateTimeAsia::now()->format('d-m-Y') . '
             </p>
         </div>
         <div class="content" id="content">

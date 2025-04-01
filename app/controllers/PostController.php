@@ -8,6 +8,7 @@
     use Exception;
     use Ramsey\Uuid\Uuid;
     use Helper\FileProcess;
+    use Helper\Caculate;
 
     class PostController {
         private $model;
@@ -22,13 +23,31 @@
 
         public function index() {
             $categories = $this->categoryModel->getCategories();
-            $posts = $this->model->getAllPosts();
+
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+            $totalPosts = count($this->model->getAllPosts());
+            $limit = 6;
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+            $posts = $this->model->getAllPostsPaginate($limit, $offset, $currentPage);
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
         public function show($id) {
             $post = $this->model->getPostById($id);
             require_once __DIR__ . '/../../views/pages/news/show.php';
+        }
+
+        public function getPostsByCategory($id): void {
+            $categories = $this->categoryModel->getCategories();
+
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+            $totalPosts = count($this->model->getPostsByCategory($id));
+            $limit = 6;
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+            $posts = $this->model->getPostsByCategoryPaginate($id, $limit, $offset, $currentPage);
+            require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
         public function create() {

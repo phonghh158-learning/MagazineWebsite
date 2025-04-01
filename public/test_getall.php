@@ -2,15 +2,26 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\repositories\CategoryRepository;
+use App\repositories\PostRepository;
+use Helper\Caculate;
 use Helper\DateTimeAsia;
 
-$repo = new CategoryRepository();
+$repo = new PostRepository();
 
-$categories = $repo->getAll();
+$allPosts = $repo->getAll();
+$limit = 9;
+$offset = Caculate::paginateOffset(count($allPosts), 1, $limit);
 
-foreach ($categories as $category) {
-    echo $category->getName() . " - " . $category->getId() . " - " . $category->getDescription() . "<br>";
+var_dump($offset);
+var_dump($limit);
+
+$posts = $repo->getAllPaginate(9, 0);
+var_dump($posts);
+
+foreach ($posts as $p) {
+    echo '<pre>';
+    print_r($p);    
+    echo '</pre>';
 }
 
 ?>

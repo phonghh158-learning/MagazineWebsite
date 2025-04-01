@@ -186,3 +186,81 @@ section#news .magazine-posts .item .news-about p {
     opacity: 1;
     transform: scale(1);
 }
+
+/* Pagination */
+.pagination {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: max-content;
+    margin-top: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination label {
+    margin-right: 8px;
+    margin-bottom: 2px;
+    
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.pagination div {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    height: 32px;
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    color: var(--text-color);
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination input {
+    position: relative;
+    width: 64px;
+    height: 24px;
+    padding-left: 4px; 
+    border: 2px dashed var(--accent-color);
+    outline: none;
+    background-color: transparent;
+    color: var(--text-color);
+
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    text-align: left;
+
+    transition: all .2s ease;
+}
+
+.pagination input:focus {
+    border: 1px solid var(--accent-color);
+}
+
+.pagination div span {
+    position: absolute;
+    right: 20px;
+}
+
+.pagination button {
+    width: 24px;
+    height: 24px;
+    margin: 0 8px;
+    border-radius: 4px;
+    border: 2px dashed var(--accent-color);
+    cursor: pointer;
+    color: var(--text-color);
+    font-family: var(--text-font);
+    font-size: 1.1rem;
+    transition: all .2s ease;
+}
+
+.pagination button:hover {
+    background-color: var(--accent-color);
+}
+

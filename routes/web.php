@@ -31,18 +31,24 @@ Router::get('logout', [AuthController::class, 'logout']);
 //Category
 Router::get('category', [CategoryController::class,'index']);
 Router::get('category/show/{id}', [CategoryController::class,'show']);
-Router::post('category/show/{id}', [CategoryController::class,'updateCategory']);
-Router::post('category/show/{id}', [CategoryController::class,'deleteCategory']);
+
 Router::get('category/create', [CategoryController::class,'create']);
 Router::post('category/create', [CategoryController::class,'createCategory']);
+
+Router::post('category/show/{id}', [CategoryController::class,'updateCategory']);
+Router::post('category/show/{id}', [CategoryController::class,'deleteCategory']);
 
 //News
 Router::get('news', [PostController::class,'index']);
 Router::get('news/{id}', [PostController::class,'show']);
-Router::get('news/update/{id}', [PostController::class,'update']);
-Router::post('news/update/{id}', [PostController::class,'updatePost']);
-Router::post('news/delete/{id}', [PostController::class,'softDeletePost']);
+Router::get('news/category/{id}', [PostController::class,'getPostsByCategory']);
+
 Router::get('news/create', [PostController::class,'create']);
 Router::post('news/create', [PostController::class,'createPost']);
+
+Router::get('news/update/{id}', [PostController::class,'update']);
+Router::post('news/update/{id}', [PostController::class,'updatePost']);
+
+Router::post('news/delete/{id}', [PostController::class,'softDeletePost']);
 
 

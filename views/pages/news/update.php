@@ -43,7 +43,9 @@ $content = '
             <option value="pending" ' . ($post->getStatus() == 'pending' ? 'selected' : '') . '>Đang chờ duyệt</option>
             <option value="deleted" ' . ($post->getStatus() == 'deleted' ? 'selected' : '') . '>Bài viết đã xóa</option>
         </select>
-        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept="image/*" style="background-image: url(/' . $post->getThumbnail() . '); background-size: cover;">
+        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept=".jpg, .jpeg, .png"
+        style="background-image: url(/' . $post->getThumbnail() . ');">
+        <p id="status-text"></p>
         <input type="text" name="current-thumbnail" value="' . $post->getThumbnail() . '" hidden>
         <select name="category_id" id="category" class="category" required>
             <option value="" disabled>Chọn danh mục</option>
@@ -56,7 +58,7 @@ $content = '
                 Tác giả: ' . $post->getAuthorName() . '
             </p>
             <p class="date">
-                Ngày đăng: '. $post->getCreatedAt()->format('Y-m-d') . '
+                Ngày đăng: '. $post->getCreatedAt()->format('d-m-Y') . '
             </p>
         </div>
         <div class="content" id="content">

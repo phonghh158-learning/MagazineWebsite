@@ -1,7 +1,5 @@
 <?php
 
-use Helper\DateTimeAsia;
-
 $title = "Đọc báo";
 $css = '/assets/css/magazine-post.css';
 
@@ -13,7 +11,7 @@ if ($post) {
     $postStatus = $post->getStatus();
     $postCategory = $post->getCategoryName();
     $postAuthor = $post->getAuthorName();
-    $postCreatedAt = DateTimeAsia::toUTC7($post->getCreatedAt());
+    $postCreatedAt = $post->getCreatedAt()->format('d-m-Y');
 }
 
 $pNumber = 0;
