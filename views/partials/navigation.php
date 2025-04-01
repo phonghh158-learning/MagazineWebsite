@@ -11,6 +11,17 @@
             </a>
         </li>
         <?php
+            if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin') {
+                echo "
+                <li>
+                    <a href=\"/category\" class=\"nav-link\">
+                        <i class='bx bx-category'></i>
+                    </a>
+                </li>
+                ";
+            }
+        ?>
+        <?php
             if (isset($_SESSION['user_id'])) {
                 echo "
                 <li>

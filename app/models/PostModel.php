@@ -37,6 +37,7 @@ class PostModel {
             $post->getThumbnail(),
             $paragraphs,
             $post->getStatus(),
+            $post->getCategoryId(),
             $this->categoryRepository->getById($post->getCategoryId())->getName(),
             $post->getAuthorId(),
             $this->userRepository->getById($post->getAuthorId())->getFullname(),

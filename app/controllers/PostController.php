@@ -68,7 +68,7 @@
                     $post = $this->model->createPost(
                         $id, $title, $thumbnail, 
                         $paragraphTitles, $paragraphContents, 
-                        $status, $categoryId, $authorId
+                        $categoryId, $authorId
                     );
                     
                     if (!$post) {
@@ -85,7 +85,6 @@
         public function update($id) {
             $post = $this->model->getPostById($id);
             $categories = $this->categoryModel->getCategories();
-            $author = $this->userModel->getUserById($_SESSION['user_id']);
             require_once __DIR__ . '/../../views/pages/news/update.php';
         }
 
@@ -109,7 +108,7 @@
                             $errorText[] = "Lỗi khi tải ảnh lên!";
                         }
                     } else {
-                        $errorText[] = "Vui lòng chọn hình ảnh!";
+                        $thumbnail = trim($_POST['current-thumbnail']) ?? '';
                     }
         
                     if (!empty($errorText)) {

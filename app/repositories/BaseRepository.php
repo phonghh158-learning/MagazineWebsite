@@ -75,6 +75,8 @@
                     error_log("Error: Missing ID in update data");
                     return false;
                 }
+
+                $data['updated_at'] = DateTimeAsia::now()->format('Y-m-d H:i:s');
                 
                 $keys = array_keys(array_filter($data, fn($key) => $key !== 'id', ARRAY_FILTER_USE_KEY));
                 $setString = implode(', ', array_map(fn($key) => "{$key} = :{$key}", $keys));

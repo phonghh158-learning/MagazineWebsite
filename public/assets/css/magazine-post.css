@@ -149,6 +149,7 @@
 
 /* WRITE POST FORM */
 .write-post-form .thumbnail {
+    position: relative;
     display: flex;
     width: 100%;
     height: 224px;
@@ -159,7 +160,7 @@
 .write-post-form .thumbnail::before {
     content: 'Select Image';
     position: absolute;
-    top: 100px;
+    top: calc(50% - 16px);
     left: calc(50% - 64px);
     display: inline-block;
     -webkit-user-select: none;
@@ -175,7 +176,8 @@
     visibility: hidden;
 }
 
-.write-post-form .category {
+.write-post-form .category,
+.write-post-form .status {
     width: max-content;
     height: max-content;
     padding: 8px 16px 8px 0;
@@ -255,7 +257,8 @@
     width: 100%;
     min-width: 100%;
     max-width: 100%;
-    height: max-content;
+    height: auto;
+    min-height: 144px;
     padding: 8px;
     background-color: transparent;
     border: 1px dashed var(--accent-color);
@@ -265,6 +268,9 @@
     font-size: 1rem;
     color: var(--text-color);
     transition: all .3s ease;
+
+    box-sizing: border-box; /* Đảm bảo padding không làm tăng kích thước */
+    overflow: auto; /* Để tránh bị tràn nội dung */
 }
 
 .write-post-form .paragraph-function {

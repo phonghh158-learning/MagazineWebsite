@@ -32,7 +32,7 @@ CREATE TABLE Magazine_Posts (
     id CHAR(36) PRIMARY KEY UNIQUE NOT NULL,
     title NVARCHAR(255) NOT NULL,
     thumbnail NVARCHAR(255) NULL,
-    content LONGTEXT NOT NULL,
+    paragraphs LONGTEXT NOT NULL,
     status ENUM('public', 'pending', 'deleted') DEFAULT 'pending',
     category_id CHAR(36),
     author_id CHAR(36),

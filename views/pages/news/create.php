@@ -27,7 +27,7 @@ $content = '
                 Tác giả: ' . $author->getFullname() . '
             </p>
             <p class="date">
-                Ngày đăng: '. DateTimeAsia::toUTC7(DateTimeAsia::now()) . '
+                Ngày đăng: '. DateTimeAsia::now()->format('Y-m-d') . '
             </p>
         </div>
         <div class="content" id="content">

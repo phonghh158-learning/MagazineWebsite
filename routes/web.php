@@ -39,6 +39,7 @@ Router::post('category/create', [CategoryController::class,'createCategory']);
 //News
 Router::get('news', [PostController::class,'index']);
 Router::get('news/{id}', [PostController::class,'show']);
+Router::get('news/update/{id}', [PostController::class,'update']);
 Router::post('news/update/{id}', [PostController::class,'updatePost']);
 Router::post('news/delete/{id}', [PostController::class,'softDeletePost']);
 Router::get('news/create', [PostController::class,'create']);
