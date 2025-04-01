@@ -104,6 +104,49 @@
     transition: all .3s ease;
 }
 
+/* function CRUD */
+.function {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: calc(100% - 72px * 2);
+    height: max-content;
+    padding: 24px 0;
+    margin: 16px 72px;
+    border-top: 1px solid var(--accent-color);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.function .function-item {
+    display: flex;
+    flex-direction: row;
+    width: 48%;
+    height: 48px;
+    border: 1px solid var(--accent-color);
+    background-color: var(--primary-color);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.function .function-item:hover {
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+.function .function-item:active {
+    transform: scale(0.96);
+}
+
+.function .function-item a {
+    display: flex;
+    flex-direction: row;
+    width: 48%;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
 /* WRITE POST FORM */
 .write-post-form .thumbnail {
     display: flex;
@@ -434,6 +477,66 @@ body.dark .write-post-form .submit {
     color: var(--text-color);
 }
 
+
+/* Modal Panel */
+.modal {
+    display: none; /* Ẩn ban đầu */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Overlay */
+}
+
+.modal-content {
+    background-color: var(--item-color);
+    color: var(--text-color);
+    font-family: var(--text-font);
+    padding: 20px;
+    border-radius: 8px;
+    width: 30%;
+    min-width: 300px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15% auto;
+    text-align: center;
+}
+
+.modal-title {
+    font-family: var(--title-font);
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.modal-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: var(--text-font);
+}
+
+.btn-cancel {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.btn-delete {
+    background-color: var(--accent-color);
+    color: var(--light-text-color);
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
 
 
 

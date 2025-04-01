@@ -40,3 +40,22 @@ for (let i = 1; i <= parseInt(yourRatingValue); i++) {
 }
 
 
+const btnDelete = document.getElementById('btn-delete');
+
+btnDelete.addEventListener('click', () => {
+    let res = prompt();
+});
+
+
+function openModal() {
+    document.getElementById("deleteModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("deleteModal").style.display = "none";
+}
+
+function confirmDelete() {
+    alert("Bài viết đã bị xóa!");
+    closeModal();
+}

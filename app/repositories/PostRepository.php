@@ -88,6 +88,20 @@
             }
         }
 
+        public function softDelete($id) {
+            try {
+                $query = "UPDATE {$this->table} SET deleted_at = :deleted_at, status = :status WHERE id = :id";
+                $stmt = $this->pdo->prepare($query);
+                
+                $now = DateTimeAsia::now()->format('Y-m-d H:i:s');
+                
+                return $stmt->execute(["id" => $id, "deleted_at" => $now, "status" => 'deleted']);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return false;
+            }
+        }
+
         public function searchPost($keyword) {
             try {
                 $query = "SELECT * FROM {$this->table} WHERE title LIKE :keyword AND deleted_at IS NULL";

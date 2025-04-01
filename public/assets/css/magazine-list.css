@@ -4,6 +4,7 @@ section#news .magazine-posts {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr, 1fr;
     gap: 32px;
+    justify-items: center;
 }
 
 section#news .magazine-posts .item {
@@ -11,7 +12,7 @@ section#news .magazine-posts .item {
     display: flex;
     flex-direction: column;
     width: 260px;
-    height: 340px;
+    height: 320px;
     padding: 16px;
     border-radius: 8px;
     background-color: var(--item-color);
@@ -64,7 +65,7 @@ section#news .magazine-posts .item .news-about {
     position: absolute;
     display: flex;
     bottom: 12px;
-    flex-direction: row;
+    flex-direction: column;
     width: calc(100% - 32px);
     height: max-content;
     justify-content: space-between;
@@ -83,6 +84,7 @@ section#news .magazine-posts .item .news-about p {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: auto;
     gap: 16px;
+    justify-items: center;
 }
 
 .category-list .item {

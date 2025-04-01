@@ -38,6 +38,7 @@ class PostModel {
             $paragraphs,
             $post->getStatus(),
             $this->categoryRepository->getById($post->getCategoryId())->getName(),
+            $post->getAuthorId(),
             $this->userRepository->getById($post->getAuthorId())->getFullname(),
             $post->getCreatedAt(),
             $post->getUpdatedAt()
@@ -54,9 +55,15 @@ class PostModel {
         return $post ? $this->mapToViewModel($post) : null;
     }
 
-    public function createPost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $status, $categoryId, $authorId) {
+    public function createPost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $categoryId, $authorId) {
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);
         
+        if ($this->userRepository->getById($authorId)->getRole() !== 'admin') {
+            $status = 'pending';
+        } else {
+            $status = 'public';
+        }
+
         $paragraphs = [];
         for ($i = 0; $i < count($paragraphTitles); $i++) {
             $paragraphs[] = [

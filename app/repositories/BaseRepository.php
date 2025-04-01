@@ -106,7 +106,7 @@
                 $query = "UPDATE {$this->table} SET deleted_at = :deleted_at WHERE id = :id";
                 $stmt = $this->pdo->prepare($query);
                 
-                $now = DateTimeAsia::now();
+                $now = DateTimeAsia::now()->format('Y-m-d H:i:s');
                 
                 return $stmt->execute(["id" => $id, "deleted_at" => $now]);
             } catch (PDOException $e) {

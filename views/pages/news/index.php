@@ -17,24 +17,17 @@ foreach ($categories as $category) {
             </a>
         </div>
     ';
-    // if ($category->getId() == $post->getCategoryId()) {
-    //     $postCategory = $category->getName();
-    // }
 }
 
-// echo $post->getCategoryId();
-
-$postCategory = '';
-
-$newsListHTML = '';
+$postHTML = '';
 foreach ($posts as $post) {
-    $newsListHTML .= '
+    $postHTML .= '
         <div class="item">
-            <a href="#">
+            <a href="/news/'. $post->getId() .'">
                 <img src="/'. $post->getThumbnail() .'" alt="">
                 <br />
                 <div class="news-category">
-                    <p> ' . $postCategory . ' </p>
+                    <p> ' . $post->getCategoryName() . ' </p>
                 </div>
                 <div class="news-title">
                     <p> ' . $post->getTitle() . ' </p>
@@ -42,8 +35,7 @@ foreach ($posts as $post) {
                 <div class="news-about">
                     <p class="news-date"> ' . DateTimeAsia::toUTC7($post->getCreatedAt()) . ' </p>
                     <a href="#" class="news-author">
-                        Xem thêm
-                        <i class=\'bx bx-right-arrow-alt\'></i>
+                        ' . $post->getAuthorName() . '
                     </a>
                 </div>
             </a>
@@ -68,30 +60,7 @@ $content = '
                     <br><br>
                     <section id="news">
                         <div class="magazine-posts">
-                            <div class="item">
-                                <a href="#">
-                                    <img src="images/home/5b63853da93f72554033ef2c52748378.jpg" alt="">
-                                    <br />
-                                    <div class="news-category">
-                                        <p>
-                                            Review
-                                        </p>
-                                    </div>
-                                    <div class="news-title">
-                                        <p>
-                                            Tên bản tin
-                                        </p>
-                                    </div>
-                                    <div class="news-about">
-                                        <p class="news-date">
-                                            12/03/2025
-                                        </p>
-                                        <p class="news-author">
-                                            Farre Virtuoso
-                                        </p>
-                                    </div>
-                                </a>
-                            </div>
+                            ' . $postHTML . '
                         </div>
 
                         <div class="section-button">

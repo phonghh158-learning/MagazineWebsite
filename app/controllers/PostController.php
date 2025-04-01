@@ -21,6 +21,7 @@
         }
 
         public function index() {
+            $categories = $this->categoryModel->getCategories();
             $posts = $this->model->getAllPosts();
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
@@ -101,10 +102,6 @@
         
                     $errorText = [];
         
-                    if (empty($title) || empty($content) || empty($categoryId) || empty($authorId)) {
-                        $errorText[] = "Vui，请 输入所有信息!";
-                    }
-        
                     $thumbnail = null;
                     if (!empty($_FILES['thumbnail']['name'])) {
                         $thumbnail = FileProcess::uploadImage($_FILES['thumbnail'], 'news', $id);
@@ -112,7 +109,7 @@
                             $errorText[] = "Lỗi khi tải ảnh lên!";
                         }
                     } else {
-                        $errorText[] = "Vui，请 选择图片!";
+                        $errorText[] = "Vui lòng chọn hình ảnh!";
                     }
         
                     if (!empty($errorText)) {
@@ -129,7 +126,7 @@
                         throw new Exception("Không thể tạo bài viết! Kiểm tra model.");
                     }
         
-                    header("Location: /news");
+                    header("Location: /news/{$id}");
                 }
             } catch (Exception $e) {
                 error_log("Lỗi updatePost: " . $e->getMessage());
@@ -141,7 +138,9 @@
         }
 
         public function softDeletePost($id) {
-            return $this->model->softDeletePost($id);
+            $this->model->softDeletePost($id);
+            header("Location: /news");
+            exit();
         }
 
         public function searchPost($keyword) {
