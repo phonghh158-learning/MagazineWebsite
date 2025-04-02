@@ -1,10 +1,8 @@
 const fnUpdate = document.getElementById('fn-update');
 const fnDelete = document.getElementById('fn-delete');
 const fnShow = document.getElementById('fn-show');
-const action = document.getElementById('action');
 
 fnUpdate.addEventListener('click', () => {
-    action.setAttribute('value', 'update');
     document.getElementById('title').innerText = "Danh mục - Chỉnh sửa";
 
     document.getElementById('lbl-created_at').style.display = 'none';
@@ -15,8 +13,6 @@ fnUpdate.addEventListener('click', () => {
     document.getElementById('name').removeAttribute('disabled');
     document.getElementById('description').removeAttribute('disabled');
 
-    document.getElementById('message').innerText = 'Bạn có chắc chắn sẽ thay đổi như vậy không?';
-
     fnUpdate.disabled = true;
 
     loadIcon();
@@ -24,22 +20,7 @@ fnUpdate.addEventListener('click', () => {
 });
 
 fnDelete.addEventListener('click', () => {
-    action.setAttribute('value', 'delete');
-    document.getElementById('title').innerText = "Danh mục - Xóa";
-
-    document.getElementById('lbl-created_at').style.display = 'unset';
-    document.getElementById('created_at').style.display = 'unset';
-    document.getElementById('lbl-updated_at').style.display = 'unset';
-    document.getElementById('updated_at').style.display = 'unset';
-
-    document.getElementById('name').disabled = true;
-    document.getElementById('name').require = false;
-    document.getElementById('description').disabled = true;
-    document.getElementById('description').require = false;
-
-    document.getElementById('message').innerText = 'Bạn chắc chắn muốn xóa danh mục này?';
-
-    showFormButton();
+    document.getElementById('title').innerText = "Danh mục - Xóa";    
 });
 
 fnShow.addEventListener('click', () => {

@@ -20,8 +20,7 @@ $content = '
                     <div class="title">
                         <p id="title">Danh mục - Xem</p>
                     </div>
-                    <form class="crud" action="/category/show/' . $id . '" method="POST">
-                        <input type="text" name="action" id="action" hidden>
+                    <form class="crud" action="/category/update/' . $id . '" method="POST">
                         <input type="text" name="id" id="id" value="' . $id . '" hidden>
 
                         <label for="name" id="lbl-name">Name</label>
@@ -64,13 +63,29 @@ $content = '
                             <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
                             <p>Chỉnh sửa</p>
                         </div>
-                        <div class="function-item" id="fn-delete">
+                        <div class="function-item" id="fn-delete" onclick="openModal()">
                             <i class=\'bx bx-trash\'></i>
                             <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
                             <p>Xóa</p>
                         </div>
                     </div>
                 </section>
+
+                <!-- Modal Panel -->
+                <div id="deleteModal" class="modal">
+                    <form action="/category/delete/' . $id . '" method="POST" class="modal-content">
+                        <input type="hidden" name="id" value="' . $id . '">
+                        <h2 class="modal-title">Xóa danh mục?</h2>
+                        <p>Bạn có chắc chắn muốn xóa danh mục này không?<br/>Hành động này không thể hoàn tác.</p>
+                        <br/>
+                        <label for="password" id="lbl-password">Vui lòng nhập mật khẩu</label><br/>
+                        <input type="password" name="password" id="password" placeholder="Nhập mật khẩu để xóa" required>
+                        <div class="modal-buttons">
+                            <button type="button" class="btn btn-cancel" onclick="closeModal()">Hủy</button>
+                            <button type="submit" class="btn btn-delete" onclick="confirmDelete()">Xóa</button>
+                        </div>
+                    </form>
+                </div>
 ';
 
 if ($deletedAt != null) {

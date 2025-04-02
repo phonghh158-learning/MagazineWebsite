@@ -45,13 +45,13 @@ class CategoryController {
 
     public function updateCategory($id) {
         try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'update') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $name = trim($_POST['name'] ?? '');
                 $description = trim($_POST['description'] ?? '');
                 $icon = trim($_POST['icon'] ?? '');
 
                 $this->model->updateCategory($id, $name, $icon, $description);
-                header("Location: /category");
+                header("Location: /category/$id");
                 exit();
             }
         } catch(Exception $e) {
@@ -62,8 +62,9 @@ class CategoryController {
 
     public function deleteCategory($id) {
         try {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'delete') {
-                $this->model->deleteCategory($id);
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $password = $_POST['password'] ?? '';
+                $this->model->deleteCategory($id, $password);
                 header("Location: /category");
                 exit();
             }

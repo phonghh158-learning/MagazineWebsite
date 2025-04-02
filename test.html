@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Searchbox với kiểm soát datalist</title>
+</head>
+<body>
+    <label for="search">Tìm kiếm:</label>
+    <input type="search" id="search" name="search" placeholder="Nhập từ khóa...">
+    <datalist id="search-options">
+        <option value="HTML">
+        <option value="CSS">
+        <option value="JavaScript">
+        <option value="Python">
+        <option value="React">
+    </datalist>
+
+    <script>
+        const inputField = document.getElementById('search');
+        const datalist = document.getElementById('search-options');
+        
+        inputField.addEventListener('input', () => {
+            inputField.setAttribute('list', 'search-options');
+        });
+
+        inputField.addEventListener('click', () => {
+            inputField.removeAttribute('list'); // Ngăn hiển thị datalist khi chỉ click chuột
+        });
+    </script>
+</body>
+</html>

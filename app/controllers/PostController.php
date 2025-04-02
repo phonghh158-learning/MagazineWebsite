@@ -5,6 +5,7 @@
     use App\models\PostModel;
     use App\models\UserModel;
     use App\models\CategoryModel;
+    use App\models\ReviewModel;
     use Exception;
     use Ramsey\Uuid\Uuid;
     use Helper\FileProcess;
@@ -14,11 +15,13 @@
         private $model;
         private $userModel;
         private $categoryModel;
+        private $reviewModel;
 
         public function __construct() {
             $this->model = new PostModel();
             $this->userModel = new UserModel();
             $this->categoryModel = new CategoryModel();
+            $this->reviewModel = new ReviewModel();
         }
 
         public function index() {
@@ -29,12 +32,14 @@
             $totalPosts = count($this->model->getAllPosts());
             $limit = 6;
             $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
-            $posts = $this->model->getAllPostsPaginate($limit, $offset, $currentPage);
+            $posts = $this->model->getAllPostsPaginate($limit, $offset);
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
         public function show($id) {
             $post = $this->model->getPostById($id);
+            // $reviews = $this->reviewModel->getReviewByPostId($id);
+            $userReview = $this->reviewModel->getReviewByUserIdAndPostId($_SESSION['user_id'], $id);
             require_once __DIR__ . '/../../views/pages/news/show.php';
         }
 
@@ -46,7 +51,7 @@
             $totalPosts = count($this->model->getPostsByCategory($id));
             $limit = 6;
             $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
-            $posts = $this->model->getPostsByCategoryPaginate($id, $limit, $offset, $currentPage);
+            $posts = $this->model->getPostsByCategoryPaginate($id, $limit, $offset);
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
@@ -89,9 +94,12 @@
                     }
         
                     header("Location: /news");
+                    exit();
                 }
             } catch (Exception $e) {
+                echo $e->getMessage();
                 error_log("Lỗi createPost: " . $e->getMessage());
+                throw new Exception($e->getMessage());
             }
         }
 
@@ -133,6 +141,7 @@
                     }
         
                     header("Location: /news/{$id}");
+                    exit();
                 }
             } catch (Exception $e) {
                 error_log("Lỗi updatePost: " . $e->getMessage());
@@ -144,13 +153,43 @@
         }
 
         public function softDeletePost($id) {
-            $this->model->softDeletePost($id);
+            $password = $_POST['password'] ?? '';
+            $this->model->softDeletePost($id, $password);
             header("Location: /news");
             exit();
         }
 
-        public function searchPost($keyword) {
-            return $this->model->searchPost($keyword);
+        public function searchPost() {
+            $searchInput = trim($_GET['search-input']);
+            if (empty($searchInput)) {
+                header('Location: /news');
+                exit;
+            }
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+            $totalPosts = $this->model->searchTotalPost($searchInput);
+            $limit = 6;
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+            $posts = $this->model->searchPost($searchInput, $limit, $offset);
+            
+            $categories = $this->categoryModel->getCategories();
+            require_once __DIR__ . '/../../views/pages/news/index.php';
+        }
+
+        public function addReview($postId) {
+            try {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $rating = $_POST['rating'];
+                    $comment = trim($_POST['comment']);
+
+                    $this->reviewModel->createReview($postId, $rating, $comment);
+
+                    header("Location: /news/{$postId}");
+                    exit();
+                }
+            } catch (Exception $e) {
+                error_log("Lỗi addReview: " . $e->getMessage());
+            }
         }
     }
 

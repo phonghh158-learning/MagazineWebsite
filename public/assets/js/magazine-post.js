@@ -39,23 +39,25 @@ for (let i = 1; i <= parseInt(yourRatingValue); i++) {
     document.getElementById('rating-' + i).classList.add('bxs-star');
 }
 
-
-const btnDelete = document.getElementById('btn-delete');
-
-btnDelete.addEventListener('click', () => {
-    let res = prompt();
-});
-
-
-function openModal() {
-    document.getElementById("deleteModal").style.display = "block";
+let yourRatingText = document.getElementById('your-rating-text').textContent;
+switch (yourRatingValue) {
+    case '1':
+        yourRatingText = 'Dở';
+        break;
+    case '2':
+        yourRatingText = 'Khá tệ';
+        break;
+    case '3':
+        yourRatingText = 'Tạm được';
+        break;
+    case '4':
+        yourRatingText = 'Hay';
+        break;
+    case '5':
+        yourRatingText = 'Xuất sắc';
+        break;
+    default:
+        yourRatingText = 'Khó đoán';
+        break;
 }
 
-function closeModal() {
-    document.getElementById("deleteModal").style.display = "none";
-}
-
-function confirmDelete() {
-    alert("Bài viết đã bị xóa!");
-    closeModal();
-}

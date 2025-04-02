@@ -62,11 +62,15 @@ if (empty($posts)) {
 }
 
 
+if (isset($_SESSION['user_id'])) {
+    
+}
+
 
 
 $content = '
-                    <form class="search-box" accept="/search" method="GET">
-                        <input type="text" placeholder="Nhập từ khóa...">
+                    <form class="search-box" action="/news/search" method="GET">
+                        <input type="text" id="search-input" name="search-input" placeholder="Tìm kiếm tiêu đề bài báo">
                         <i class=\'bx bx-search icon\'></i>
                         <button type="submit">
                             <i class=\'bx bx-search\'></i>

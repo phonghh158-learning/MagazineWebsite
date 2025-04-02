@@ -2,26 +2,25 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\repositories\PostRepository;
+use App\entities\CategoryEntity;
+use App\repositories\CategoryRepository;
+use App\models\CategoryModel;
 use Helper\Caculate;
 use Helper\DateTimeAsia;
 
-$repo = new PostRepository();
+$repo = new CategoryRepository();
 
-$allPosts = $repo->getAll();
-$limit = 9;
-$offset = Caculate::paginateOffset(count($allPosts), 1, $limit);
+$categories = $repo->getAll();
 
-var_dump($offset);
-var_dump($limit);
+foreach ($categories as $category) {
+    echo $category->getName() . "<br>";
+}
 
-$posts = $repo->getAllPaginate(9, 0);
-var_dump($posts);
+$model = new CategoryModel();
+$res = $model->updateCategory("bdfabd14-d7e8-44cf-baea-9fc2a9103461", "Danh muc TESTEST", "<i class='bx bx-bowl-rice'></i>", "Description TESTEST");
 
-foreach ($posts as $p) {
-    echo '<pre>';
-    print_r($p);    
-    echo '</pre>';
+if ($res) {
+    echo "Thanh cong";
 }
 
 ?>

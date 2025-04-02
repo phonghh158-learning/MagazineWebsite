@@ -3,6 +3,7 @@
 namespace App\models;
 
 use App\repositories\CategoryRepository;
+use App\repositories\UserRepository;
 use App\entities\CategoryEntity;
 use App\viewmodels\CategoryViewModel;
 use Helper\DateTimeAsia;
@@ -46,11 +47,25 @@ class CategoryModel {
         return $this->repository->updateCategory($id, $name, $icon, $description, $category->getCreatedAt());
     }
 
-    public function deleteCategory($id) {
+    public function deleteCategory($id, $password) {
         $category = $this->repository->getById($id);
         if (!$category) {
-            return ("Không tìm thấy dữ liệu về danh mục");
+            throw new Exception("Không tìm thấy dữ liệu về danh mục");
         }
-        return $this->repository->delete($id);
+
+        if (empty($password)) {
+            throw new Exception("Vui lòng nhập mật khẩu");
+        }
+
+        $user = (new UserRepository())->getById($_SESSION['user_id']);
+        if (!$user) {
+            throw new Exception("Không tìm thấy người dùng");
+        }
+
+        if (password_verify($password, $user->getPassword())) {
+            return $this->repository->delete($id);
+        } else {
+            throw new Exception("Mật khẩu không chính xác");
+        }
     }
 }

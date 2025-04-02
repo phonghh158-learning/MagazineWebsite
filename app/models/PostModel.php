@@ -51,7 +51,7 @@ class PostModel {
         $posts = $this->postRepository->getAll();
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
-    public function getAllPostsPaginate($limit, $offset, $currentPage) {
+    public function getAllPostsPaginate($limit, $offset) {
         $posts = $this->postRepository->getAllPaginate($limit, $offset);
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
@@ -66,7 +66,7 @@ class PostModel {
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
-    public function getPostsByCategoryPaginate($categoryId, $limit, $offset, $currentPage) {
+    public function getPostsByCategoryPaginate($categoryId, $limit, $offset) {
         $posts = $this->postRepository->getPostsByCategoryPaginate($categoryId, $limit, $offset);
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
@@ -123,16 +123,37 @@ class PostModel {
         return $this->postRepository->delete($id);
     }
 
-    public function softDeletePost($id) {
-        return $this->postRepository->softDelete($id);
-    }
+    public function softDeletePost($id, $password) {
+        $post = $this->postRepository->getById($id);
+        if (!$post) {
+            throw new Exception("Không tìm thấy bài viết");
+        }
 
-    public function searchPost($keyword) {
-        $posts = $this->postRepository->searchPost($keyword);
-        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+        if (empty($password)) {
+            throw new Exception("Vui lòng nhập mật khẩu");
+        }
+
+        $user = (new UserRepository())->getById($_SESSION['user_id']);
+        if (!$user) {
+            throw new Exception("Không tìm thấy người dùng");
+        }
+
+        if (password_verify($password, $user->getPassword())) {
+            return $this->postRepository->softDelete($id);
+        } else {
+            throw new Exception("Mật khẩu không chính xác");
+        }
     }
 
     public function getThumbnailById($id) {
         return $this->postRepository->getThumbnailById($id);
+    }
+
+    public function searchPost($keyword, $limit, $offset) {
+        $posts = $this->postRepository->searchPostPaginate($keyword, $limit, $offset);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+    public function searchTotalPost($keyword) {
+        return $this->postRepository->searchTotalPost($keyword);
     }
 }
