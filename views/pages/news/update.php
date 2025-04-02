@@ -34,15 +34,26 @@ foreach ($paragraphs as $paragraph) {
     ';
 }
 
-$content = '
-    <form class="write-post-form" action="/news/update/' . $post->getId() . '" method="POST" enctype="multipart/form-data">
-        <input type="text" name="id" value="' . $post->getId() . '" hidden>
-        <select class="status" name="status" id="status" disabled>
+$statusHTML = '';
+if ($_SESSION['user_role'] == 'admin') {
+    $statusHTML .= '
+        <select class="status" name="status" id="status">
             <option value="" disabled>Chọn trang thái</option>
             <option value="public" ' . ($post->getStatus() == 'public' ? 'selected' : '') . '>Đã đăng</option>
             <option value="pending" ' . ($post->getStatus() == 'pending' ? 'selected' : '') . '>Đang chờ duyệt</option>
             <option value="deleted" ' . ($post->getStatus() == 'deleted' ? 'selected' : '') . '>Bài viết đã xóa</option>
         </select>
+    ';
+} else {
+    $statusHTML .= '
+        <input type="text" name="status" value="' . $post->getStatus() . '">
+    ';
+}
+
+$content = '
+    <form class="write-post-form" action="/news/update/' . $post->getId() . '" method="POST" enctype="multipart/form-data">
+        <input type="text" name="id" value="' . $post->getId() . '" hidden>
+        ' . $statusHTML . '
         <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept=".jpg, .jpeg, .png"
         style="background-image: url(/' . $post->getThumbnail() . ');">
         <p id="status-text"></p>

@@ -50,10 +50,10 @@ class CategoryController {
                 $description = trim($_POST['description'] ?? '');
                 $icon = trim($_POST['icon'] ?? '');
 
-                $this->model->updateCategory($id, $name, $description, $icon);
+                $this->model->updateCategory($id, $name, $icon, $description);
                 header("Location: /category");
                 exit();
-            } 
+            }
         } catch(Exception $e) {
             error_log("Error: " . $e->getMessage());
             return false;

@@ -19,8 +19,10 @@
             return parent::create($entity);
         }
 
-        public function updateCategory($id, $name, $description, $icon) {
-            $entity = new CategoryEntity($id, $name, $icon, $description, DateTimeAsia::now(), DateTimeAsia::now(), null);
+        public function updateCategory($id, $name, $icon, $description, $createdAt) {
+            $entity = new CategoryEntity(
+                $id, $name, $icon, $description, 
+                $createdAt, DateTimeAsia::now(), null);
             return parent::update($entity);
         }
         

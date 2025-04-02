@@ -23,11 +23,11 @@
             return parent::create($entity);
         }
 
-        public function updatePost($id, $title, $thumbnail, $paragraphs, $status, $categoryId, $authorId) {
+        public function updatePost($id, $title, $thumbnail, $paragraphs, $status, $categoryId, $authorId, $createdAt) {
             $entity = new PostEntity(
                 $id, $title, $thumbnail, $paragraphs,
                 $status, $categoryId, $authorId, 
-                DateTimeAsia::now(), DateTimeAsia::now(), null);
+                $createdAt, DateTimeAsia::now(), null);
 
             return parent::update($entity);
         }

@@ -38,12 +38,12 @@ class CategoryModel {
         return $this->repository->createCategory($name, $description, $icon);
     }
 
-    public function updateCategory($id, $name, $description, $icon) {
+    public function updateCategory($id, $name, $icon, $description) {
         $category = $this->repository->getById($id);
         if (!$category) {
-            return ("Không tìm thấy dữ liệu về danh mục");
+            throw new Exception("Không tìm thấy dữ liệu về danh mục");
         }
-        return $this->repository->updateCategory($id, $name, $description, $icon);
+        return $this->repository->updateCategory($id, $name, $icon, $description, $category->getCreatedAt());
     }
 
     public function deleteCategory($id) {

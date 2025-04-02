@@ -22,7 +22,7 @@ $content = '
                     </div>
                     <form class="crud" action="/category/show/' . $id . '" method="POST">
                         <input type="text" name="action" id="action" hidden>
-                        <input type="text" name="id" id="id" value="' . $id . '" hidden disabled>
+                        <input type="text" name="id" id="id" value="' . $id . '" hidden>
 
                         <label for="name" id="lbl-name">Name</label>
                         <input type="text" name="name" id="name" value="' . $name . '" required disabled>

@@ -96,7 +96,13 @@ class PostModel {
     }
 
     public function updatePost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $status, $categoryId, $authorId) {
+        $post = $this->postRepository->getById($id);
+        
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);
+
+        if (!$post) {
+            return ("Không tìm thấy bài viết");
+        }
 
         $paragraphs = [];
         for ($i = 0; $i < count($paragraphTitles); $i++) {
@@ -108,8 +114,8 @@ class PostModel {
         $paragraphJson = json_encode($paragraphs, JSON_UNESCAPED_UNICODE);
         
         return $this->postRepository->updatePost(
-            $id, $title, $thumbnail, $paragraphJson,
-            $status, $categoryId, $authorId
+            $post->getId(), $title, $thumbnail, $paragraphJson,
+            $status, $categoryId, $authorId, $post->getCreatedAt()
         );
     }
 

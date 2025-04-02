@@ -67,20 +67,14 @@
                     $categoryId = trim($_POST['category_id']) ?? '';
                     $authorId = trim($_POST['author_id']) ?? '';
         
-                    $errorText = [];
-        
                     $thumbnail = null;
                     if (!empty($_FILES['thumbnail']['name'])) {
                         $thumbnail = FileProcess::uploadImage($_FILES['thumbnail'], 'news', $id);
                         if (!$thumbnail) {
-                            $errorText[] = "Lỗi khi tải ảnh lên!";
+                            throw new Exception("Lỗi khi tải ảnh lên!");
                         }
                     } else {
-                        $errorText[] = "Vui lòng chọn hình ảnh!";
-                    }
-        
-                    if (!empty($errorText)) {
-                        return $errorText;
+                        throw new Exception("Vui lòng chọn hình ảnh!");
                     }
         
                     // Kiểm tra kết quả insert vào DB
@@ -91,7 +85,7 @@
                     );
                     
                     if (!$post) {
-                        echo("Không thể tạo bài viết! Kiểm tra model.");
+                        throw new Exception("Không thể tạo bài viết! Kiểm tra model.");
                     }
         
                     header("Location: /news");
@@ -118,20 +112,14 @@
                     $categoryId = trim($_POST['category_id']) ?? '';
                     $authorId = trim($_POST['author_id']) ?? '';
         
-                    $errorText = [];
-        
                     $thumbnail = null;
                     if (!empty($_FILES['thumbnail']['name'])) {
                         $thumbnail = FileProcess::uploadImage($_FILES['thumbnail'], 'news', $id);
                         if (!$thumbnail) {
-                            $errorText[] = "Lỗi khi tải ảnh lên!";
+                            throw new Exception("Lỗi khi tải ảnh lên!");
                         }
                     } else {
                         $thumbnail = trim($_POST['current-thumbnail']) ?? '';
-                    }
-        
-                    if (!empty($errorText)) {
-                        return $errorText;
                     }
         
                     $post = $this->model->updatePost(

@@ -33,7 +33,10 @@ foreach ($postParagraphs as $paragraph) {
 }
 
 $actionHTML = '';
-if ($post->getAuthorId() == $_SESSION['user_id']) {
+
+if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id'])
+    || (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin')
+    ) {
     $actionHTML = '
         <div class="function">
             <div class="function-item" id="btn-update">
