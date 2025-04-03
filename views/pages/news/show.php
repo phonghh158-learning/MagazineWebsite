@@ -57,11 +57,54 @@ if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id']
     ';
 }
 
+function showReviewRatingStar($rating) {
+    $ratingStarHTML = '';
+    for ($i = 1; $i <= $rating; $i++) {
+        $ratingStarHTML .= '
+            <i class=\'bx bxs-star\' id="rating-' . $i . '"></i>
+        ';
+    }
+    for ($i = $rating + 1; $i <= 5; $i++) {
+        $ratingStarHTML .= '
+            <i class=\'bx bx-star\' id="rating-' . $i . '"></i>
+        ';
+    }
+
+    return $ratingStarHTML;
+}
+function showRatingText($rating) {
+    $ratingText = '';
+    switch ($rating) {
+        case '1':
+            $ratingText = 'Dở';
+            break;
+        case '2':
+            $ratingText = 'Khá tệ';
+            break;
+        case '3':
+            $ratingText = 'Tạm được';
+            break;
+        case '4':
+            $ratingText = 'Hay';
+            break;
+        case '5':
+            $ratingText = 'Xuất sắc';
+            break;
+        default:
+            $ratingText = 'Khó đoán';
+            break;
+    }
+
+    return $ratingText;
+}
+
 $reviewHTML = '';
 if (isset($_SESSION['user_id'])) {
+    $reviewHTML .= '<p class="magazine-review-title"> Đánh giá </p>';
+    
     if ($_SESSION['user_id'] != $post->getAuthorId() && $_SESSION['user_role'] != 'admin') {
         if ($userReview == null) {
-            $reviewHTML = '
+            $reviewHTML .= '
             <form class="review-form" action="/news/' . $postId . '/review/create" method="POST">
                 <textarea name="review" id="review" placeholder="Hãy nêu đánh giá của bạn về bài viết tại đây"></textarea>
                 <div class="review-function">
@@ -71,35 +114,59 @@ if (isset($_SESSION['user_id'])) {
                         <i class=\'bx bx-star rating-star\'></i>
                         <i class=\'bx bx-star rating-star\'></i>
                         <i class=\'bx bx-star rating-star\'></i>
-                        <input class="rating" type="number" name="rating" id="rating" min="1" max="5" hidden required>
+                        <input class="rating" type="number" name="rating" id="rating" min="1" max="5" value="" required>
                     </div>
                     <input type="submit" id="review-submit" value="Đăng" disabled>
                 </div>
             </form>
         ';
         } else {
-            $reviewHTML = '
+            $reviewHTML .= '
                 <div class="your-review">
                     <div class="review-rating">
-                        <i class=\'bx bx-star\' id="rating-1"></i>
-                        <i class=\'bx bx-star\' id="rating-2"></i>
-                        <i class=\'bx bx-star\' id="rating-3"></i>
-                        <i class=\'bx bx-star\' id="rating-4"></i>
-                        <i class=\'bx bx-star\' id="rating-5"></i>
+                        ' . showReviewRatingStar($userReview->getRating()) .'
                         <p>&ThickSpace;&ThickSpace;</p>
                         <div class="your-rating">
                             <div class="your-rating-number">
                                 <p class="your-rating-value" id="your-rating-value">' . $userReview->getRating() . '</p>
                                 <p class="rating-max">/5</p>
                             </div>
-                            <p class="your-rating-text">Khá hay</p>
+                            <p class="your-rating-text" id="your-rating-text">' . showRatingText($userReview->getRating()) . '</p>
                         </div>
                     </div>
                     <p class="review-text">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        ' . $userReview->getComment() . '
                     </p>
                 </div>
             ';
+        }
+    } else {
+        if (!$reviewsList) {
+            $reviewHTML .= '
+                <p class="no-review">Bài viết hiện tại chưa có đánh giá</p>
+            ';
+        } else {
+            foreach ($reviewsList as $review) {
+                $reviewHTML .= '
+                    <div class="your-review">
+                        <p class="review-author"> ' . $review->getAuthorName() . ' - ' . $review->getAuthorUsername() . ' </p>
+                        <div class="review-rating">
+                            ' . showReviewRatingStar($review->getRating()) .'
+                            <p>&ThickSpace;&ThickSpace;</p>
+                            <div class="your-rating">
+                                <div class="your-rating-number">
+                                    <p class="your-rating-value" id="your-rating-value">' . $review->getRating() . '</p>
+                                    <p class="rating-max">/5</p>
+                                </div>
+                                <p class="your-rating-text" id="your-rating-text">' . showRatingText($review->getRating()) . '</p>
+                            </div>
+                        </div>
+                        <p class="review-text">
+                            ' . $review->getComment() . '
+                        </p>
+                    </div>
+                ';
+            }
         }
     }
 }
@@ -134,7 +201,6 @@ $content = '
 
                 <!-- Review -->
                 <div class="magazine-review">
-                    <p class="magazine-review-title"> Đánh giá </p>
                     ' . $reviewHTML . '
                 </div>
 

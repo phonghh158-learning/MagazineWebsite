@@ -17,7 +17,8 @@ function setDisabledSubmitButton(val) {
 ratingStars.forEach((star, index) => {
     star.addEventListener('click', () => {
         ratingValue = index + 1;
-        ratingInput.value = ratingValue;
+        ratingInput.removeAttribute("value");
+        ratingInput.setAttribute("value", ratingValue);
         setDisabledSubmitButton(ratingValue);
 
         for (let i = 1; i <= ratingValue; i++) {

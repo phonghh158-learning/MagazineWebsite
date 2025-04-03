@@ -2,6 +2,8 @@
 
     namespace App\models;
 
+    use App\entities\ReviewEntity;
+    use App\viewmodels\ReviewViewModel;
     use App\repositories\ReviewRepository;
     use App\repositories\PostRepository;
     use App\repositories\UserRepository;
@@ -24,8 +26,28 @@
             }
         }
 
-        public function getReviewByPostId($postId, $limit, $offset) {
-            return $this->reviewRepository->getReviewByPostIdPaginate($postId, $limit, $offset);
+        private function mapToViewModel(ReviewEntity $review) {
+            $author = $this->userRepository->getById($review->getUserId());
+            return new ReviewViewModel(
+                $review->getId(),
+                $review->getPostId(),
+                $review->getUserId(),
+                $author->getFullname(),
+                $author->getUsername(),
+                $review->getRating(),
+                $review->getComment(),
+                $review->getCreatedAt(),
+                $review->getUpdatedAt(),
+                $review->getDeletedAt()
+            );
+        }
+
+        public function getTotalReviewsByPostId($postId) {
+            return $this->reviewRepository->getTotalReviewsByPostId($postId);
+        }
+        public function getReviewsByPostId($postId, $limit, $offset) {
+            $reviewsList = $this->reviewRepository->getReviewsByPostIdPaginate($postId, $limit, $offset);
+            return array_map(fn($reviewsList) => $this->mapToViewModel($reviewsList), $reviewsList);
         }
 
         public function createReview($postId, $rating, $comment) {
@@ -33,8 +55,8 @@
             return $this->reviewRepository->createReview($postId, $_SESSION['user_id'], $rating, $comment);
         }
 
-        public function getReviewByUserId($userId) {
-            return $this->reviewRepository->getReviewByUserId($userId);
+        public function getReviewsByUserId($userId) {
+            return $this->reviewRepository->getReviewsByUserId($userId);
         }
 
         public function getReviewByUserIdAndPostId($userId, $postId) {

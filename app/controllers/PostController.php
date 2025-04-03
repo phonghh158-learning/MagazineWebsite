@@ -38,8 +38,16 @@
 
         public function show($id) {
             $post = $this->model->getPostById($id);
-            // $reviews = $this->reviewModel->getReviewByPostId($id);
-            $userReview = $this->reviewModel->getReviewByUserIdAndPostId($_SESSION['user_id'], $id);
+
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+            $totalReviews = $this->reviewModel->getTotalReviewsByPostId($id);
+            $limit = 5;
+            $offset = Caculate::paginateOffset($totalReviews, $currentPage, $limit);
+            $reviewsList = $this->reviewModel->getReviewsByPostId($id, $limit, $offset);
+
+            if (isset($_SESSION['user_id'])) {
+                $userReview = $this->reviewModel->getReviewByUserIdAndPostId($_SESSION['user_id'], $id);
+            }
             require_once __DIR__ . '/../../views/pages/news/show.php';
         }
 
@@ -180,15 +188,16 @@
             try {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $rating = $_POST['rating'];
-                    $comment = trim($_POST['comment']);
+                    $review = trim($_POST['review']);
 
-                    $this->reviewModel->createReview($postId, $rating, $comment);
+                    $this->reviewModel->createReview($postId, $rating, $review);
 
                     header("Location: /news/{$postId}");
                     exit();
                 }
             } catch (Exception $e) {
                 error_log("Lỗi addReview: " . $e->getMessage());
+                throw new Exception($e->getMessage());
             }
         }
     }

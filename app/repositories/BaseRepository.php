@@ -75,6 +75,7 @@
                 $valuesString = implode(", ", array_fill(0, sizeof($values), "?")); // Tạo mảng với giá trị là values, sau đó thì nối mảng này thành chữ và insert
                 $query = "INSERT INTO {$this->table} (" . implode(", ", $columns) . ") VALUES ($valuesString)";
                 $stmt = $this->pdo->prepare($query);
+                echo $query;
                 return $stmt->execute($values);
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());
