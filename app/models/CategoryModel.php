@@ -52,20 +52,23 @@ class CategoryModel {
         if (!$category) {
             throw new Exception("Không tìm thấy dữ liệu về danh mục");
         }
-
+    
+        // Kiểm tra mật khẩu có được nhập không
         if (empty($password)) {
             throw new Exception("Vui lòng nhập mật khẩu");
         }
-
-        $user = (new UserRepository())->getById($_SESSION['user_id']);
+    
+        $userRepository = new UserRepository();
+        $user = $userRepository->getById($_SESSION['user_id']);
         if (!$user) {
-            throw new Exception("Không tìm thấy người dùng");
+            throw new Exception("Người dùng không tồn tại");
         }
-
-        if (password_verify($password, $user->getPassword())) {
-            return $this->repository->delete($id);
-        } else {
+    
+        // Verify password
+        if (!password_verify($password, $user->getPassword())) {
             throw new Exception("Mật khẩu không chính xác");
         }
-    }
+    
+        return $this->repository->delete($id);
+    }    
 }

@@ -63,7 +63,7 @@ $content = '
                             <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
                             <p>Chỉnh sửa</p>
                         </div>
-                        <div class="function-item" id="fn-delete" onclick="openModal()">
+                        <div class="function-item" id="fn-delete" onclick="openDeleteModal(\'' . $id . '\', \'category\')">
                             <i class=\'bx bx-trash\'></i>
                             <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
                             <p>Xóa</p>
@@ -71,18 +71,16 @@ $content = '
                     </div>
                 </section>
 
-                <!-- Modal Panel -->
-                <div id="deleteModal" class="modal">
-                    <form action="/category/delete/' . $id . '" method="POST" class="modal-content">
-                        <input type="hidden" name="id" value="' . $id . '">
-                        <h2 class="modal-title">Xóa danh mục?</h2>
-                        <p>Bạn có chắc chắn muốn xóa danh mục này không?<br/>Hành động này không thể hoàn tác.</p>
-                        <br/>
-                        <label for="password" id="lbl-password">Vui lòng nhập mật khẩu</label><br/>
-                        <input type="password" name="password" id="password" placeholder="Nhập mật khẩu để xóa" required>
-                        <div class="modal-buttons">
-                            <button type="button" class="btn btn-cancel" onclick="closeModal()">Hủy</button>
-                            <button type="submit" class="btn btn-delete" onclick="confirmDelete()">Xóa</button>
+                <!-- Modal xác nhận xóa -->
+                <div class="modal-overlay" id="modal-overlay">
+                    <form class="modal-box" method="POST" id="delete-form">
+                        <span class="close-modal" onclick="closeDeleteModal()"><i class="bx bx-x"></i></span>
+                        <h2>Xác nhận xóa</h2>
+                        <p>Bạn có chắc chắn muốn xóa mục này? Nhập mật khẩu để xác nhận.</p>
+                        <input type="password" name="password" placeholder="Nhập mật khẩu..." required>
+                        <div class="modal-actions">
+                        <button type="button" class="btn btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+                        <button type="submit" class="btn btn-delete">Xóa</button>
                         </div>
                     </form>
                 </div>

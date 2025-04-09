@@ -34,12 +34,21 @@ class CategoryController {
                 $icon = trim($_POST['icon'] ?? '');
 
                 $this->model->createCategory($name, $description, $icon);
+
+                $_SESSION['notify'] = [
+                    'type' => 'success',
+                    'message' => 'Tạo danh mục thành công!'
+                ];
                 header("Location: /category");
                 exit();
             }
         } catch(Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /category");
+            exit();
         }
     }
 
@@ -51,12 +60,21 @@ class CategoryController {
                 $icon = trim($_POST['icon'] ?? '');
 
                 $this->model->updateCategory($id, $name, $icon, $description);
-                header("Location: /category/$id");
+
+                $_SESSION['notify'] = [
+                    'type' => 'success',
+                    'message' => 'Cập nhật danh mục thành công!'
+                ];
+                header("Location: /category/show/{$id}");
                 exit();
             }
         } catch(Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /category/show/{$id}");
+            exit();
         }
     }
 
@@ -65,12 +83,22 @@ class CategoryController {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $password = $_POST['password'] ?? '';
                 $this->model->deleteCategory($id, $password);
+
+                $_SESSION['notify'] = [
+                    'type' => 'success',
+                    'message' => 'Xóa danh mục thành công!'
+                ];
+
                 header("Location: /category");
                 exit();
             }
         } catch(Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /category/show/{$id}");
+            exit();
         }
     }
 }

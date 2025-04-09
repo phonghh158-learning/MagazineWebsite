@@ -11,6 +11,15 @@
 <?php $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : ''; ?>
 <body <?php echo "class=" . $theme ?>>
     <?php include __DIR__ . '/partials/navigation.php'; ?>
+
+    <div id="notification-popup" class="notification-popup hidden">
+        <span id="notification-message"></span>
+        <span class="popup-close-btn" onclick="hideNotification()">
+            <i class="bx bx-x"></i>
+        </span>
+        <div id="notification-progress" class="notification-progress"></div>
+    </div>
+
     <div class="container">
         <?php include __DIR__ . '/partials/header.php'; ?>
 
@@ -25,7 +34,21 @@
         <?php include __DIR__ . '/partials/footer.php'; ?>
     </div>
     
+    <!-- Import Script -->
     <?php if (isset($js)) { echo '<script src="'. $js .'"></script>'; } ?>
     <script src="/assets/js/script.js"></script>
+    <!-- Import Show Notication Popup Script -->
+    <?php if (!empty($_SESSION['notify'])): ?>
+        <script>
+            showNotification(
+                <?= json_encode($_SESSION['notify']['message']) ?>,
+                <?= $_SESSION['notify']['type'] === 'success' 
+                    ? json_encode('#4caf50') 
+                    : json_encode('#f44336') ?>
+            );
+        </script>
+        <?php unset($_SESSION['notify']); ?>
+    <?php endif; ?>
+
 </body>
 </html>

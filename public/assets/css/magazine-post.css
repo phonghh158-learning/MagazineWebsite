@@ -424,6 +424,7 @@ body.dark .write-post-form .submit {
 
 /* YOUR REVIEW */
 .your-review {
+    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -495,3 +496,20 @@ body.dark .write-post-form .submit {
     color: var(--accent-color);
 }
 
+.your-review .fn-review {
+    position: absolute;
+    display: flex;
+    top: 16px;
+    right: 16px;
+    flex-direction: row;
+    width: max-content;
+    height: 24px;
+    padding: 0 8px;
+    background-color: var(--item-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}

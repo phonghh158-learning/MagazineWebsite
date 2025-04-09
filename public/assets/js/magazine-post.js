@@ -62,3 +62,28 @@ switch (yourRatingValue) {
         break;
 }
 
+// Modal - Update Review
+const editReviewOverlay = document.getElementById('edit-review-overlay');
+const editReviewForm = document.getElementById('edit-review-form');
+const editReviewText = document.getElementById('edit-review-text');
+const editRatingInput = document.getElementById('edit-rating');
+const editStars = document.querySelectorAll('#edit-review-stars .rating-star');
+const editSubmitBtn = document.getElementById('edit-review-submit');
+
+function openEditReviewModal(postId, reviewId, oldText, oldRating) {
+    editReviewOverlay.style.display = 'flex';
+    editReviewText.value = oldText;
+    editRatingInput.value = oldRating;
+    editReviewForm.action = `/news/${postId}/review/edit/${reviewId}`;
+
+    editSubmitBtn.disabled = false;
+}
+
+function closeEditReviewModal() {
+    editReviewOverlay.style.display = 'none';
+    editReviewForm.reset();
+    editReviewForm.action = '';
+    editStars.forEach(star => star.classList.remove('bxs-star', 'bx'));
+    editStars.forEach(star => star.classList.add('bx-star'));
+    editSubmitBtn.disabled = true;
+}

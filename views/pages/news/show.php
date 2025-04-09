@@ -3,6 +3,7 @@
 $title = "Đọc báo";
 $css = '/assets/css/magazine-post.css';
 
+// Kiểm tra bài viết tồn tại -> gán viewmodal
 if ($post) {
     $postId = $post->getId();
     $postTitle = $post->getTitle();
@@ -14,6 +15,7 @@ if ($post) {
     $postCreatedAt = $post->getCreatedAt()->format('d-m-Y');
 }
 
+// Hiện bài viết theo đoạn
 $pNumber = 0;
 $postContent = '';
 foreach ($postParagraphs as $paragraph) {
@@ -32,8 +34,8 @@ foreach ($postParagraphs as $paragraph) {
     ';
 }
 
+// Hiển thị chức năng nếu bạn là admin hoặc người tạo bài viết
 $actionHTML = '';
-
 if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id'])
     || (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin')
     ) {
@@ -46,7 +48,7 @@ if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id']
                     <p>Chỉnh sửa</p>
                 </a>
             </div>
-            <div class="function-item" id="btn-delete" onclick="openModal()">
+            <div class="function-item" id="btn-delete" onclick="openDeleteModal(\'' . $id . '\', \'news\')">
                 <a href="#">
                     <i class=\'bx bx-trash\'></i>
                     <span>&MediumSpace;&MediumSpace;&MediumSpace;</span>
@@ -57,6 +59,7 @@ if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id']
     ';
 }
 
+// Hiển thị đánh giá
 function showReviewRatingStar($rating) {
     $ratingStarHTML = '';
     for ($i = 1; $i <= $rating; $i++) {
@@ -98,11 +101,13 @@ function showRatingText($rating) {
     return $ratingText;
 }
 
+// Hiển thị form đánh giá - Phải đăng nhập mới hiển thị form đánh giá
 $reviewHTML = '';
 if (isset($_SESSION['user_id'])) {
     $reviewHTML .= '<p class="magazine-review-title"> Đánh giá </p>';
-    
+    // User không phải là admin hoặc người tạo bài viết mới được đánh giá
     if ($_SESSION['user_id'] != $post->getAuthorId() && $_SESSION['user_role'] != 'admin') {
+        // Nếu chưa đánh giá -> hiện form đánh giá
         if ($userReview == null) {
             $reviewHTML .= '
             <form class="review-form" action="/news/' . $postId . '/review/create" method="POST">
@@ -114,15 +119,20 @@ if (isset($_SESSION['user_id'])) {
                         <i class=\'bx bx-star rating-star\'></i>
                         <i class=\'bx bx-star rating-star\'></i>
                         <i class=\'bx bx-star rating-star\'></i>
-                        <input class="rating" type="number" name="rating" id="rating" min="1" max="5" value="" required>
+                        <input class="rating" type="number" name="rating" id="rating" min="1" max="5" value="" hidden required>
                     </div>
                     <input type="submit" id="review-submit" value="Đăng" disabled>
                 </div>
             </form>
         ';
         } else {
+            //Nếu đã đánh giá -> hiện đánh giá, có nút chỉnh sửa
             $reviewHTML .= '
                 <div class="your-review">
+                    <div class="fn-review" id="fn-review-' . $review->getId() . '" onclick="openModal(\'/news/' . $postId . '/review/update\', \'' . $userReview->getId() . '\')">
+                        <i class=\'bx bx-edit\'></i>
+                        <p>Chỉnh sửa</p>
+                    </div>
                     <div class="review-rating">
                         ' . showReviewRatingStar($userReview->getRating()) .'
                         <p>&ThickSpace;&ThickSpace;</p>
@@ -141,36 +151,68 @@ if (isset($_SESSION['user_id'])) {
             ';
         }
     } else {
+        // Nếu là nguoi tạo bài viết hoặc admin -> hiện danh sách đánh giá
         if (!$reviewsList) {
             $reviewHTML .= '
                 <p class="no-review">Bài viết hiện tại chưa có đánh giá</p>
             ';
         } else {
-            foreach ($reviewsList as $review) {
-                $reviewHTML .= '
-                    <div class="your-review">
-                        <p class="review-author"> ' . $review->getAuthorName() . ' - ' . $review->getAuthorUsername() . ' </p>
-                        <div class="review-rating">
-                            ' . showReviewRatingStar($review->getRating()) .'
-                            <p>&ThickSpace;&ThickSpace;</p>
-                            <div class="your-rating">
-                                <div class="your-rating-number">
-                                    <p class="your-rating-value" id="your-rating-value">' . $review->getRating() . '</p>
-                                    <p class="rating-max">/5</p>
-                                </div>
-                                <p class="your-rating-text" id="your-rating-text">' . showRatingText($review->getRating()) . '</p>
+            //Nếu là admin -> có nút ẩn đánh giá
+            if ($_SESSION['user_role'] == 'admin') {
+                foreach ($reviewsList as $review) {
+                    $reviewHTML .= '
+                        <div class="your-review">
+                            <div class="fn-review" id="fn-review-' . $review->getId() . '" onclick="openModal(\'/news/' . $postId . '/review/softDelete\', \'' . $review->getId() . '\')">
+                                <i class=\'bx bx-hide\'></i>
+                                <p>Ẩn đánh giá</p>
                             </div>
+                            <p class="review-author"> ' . $review->getAuthorName() . ' - ' . $review->getAuthorUsername() . ' </p>
+                            <div class="review-rating">
+                                ' . showReviewRatingStar($review->getRating()) .'
+                                <p>&ThickSpace;&ThickSpace;</p>
+                                <div class="your-rating">
+                                    <div class="your-rating-number">
+                                        <p class="your-rating-value" id="your-rating-value">' . $review->getRating() . '</p>
+                                        <p class="rating-max">/5</p>
+                                    </div>
+                                    <p class="your-rating-text" id="your-rating-text">' . showRatingText($review->getRating()) . '</p>
+                                </div>
+                            </div>
+                            <p class="review-text">
+                                ' . $review->getComment() . '
+                            </p>
                         </div>
-                        <p class="review-text">
-                            ' . $review->getComment() . '
-                        </p>
-                    </div>
-                ';
+                    ';
+                }
+            } else {
+                // Nếu là người tạo bài viết -> chỉ hiện danh sách đánh giá
+                foreach ($reviewsList as $review) {
+                    $reviewHTML .= '
+                        <div class="your-review">
+                            <p class="review-author"> ' . $review->getAuthorName() . ' - ' . $review->getAuthorUsername() . ' </p>
+                            <div class="review-rating">
+                                ' . showReviewRatingStar($review->getRating()) .'
+                                <p>&ThickSpace;&ThickSpace;</p>
+                                <div class="your-rating">
+                                    <div class="your-rating-number">
+                                        <p class="your-rating-value" id="your-rating-value">' . $review->getRating() . '</p>
+                                        <p class="rating-max">/5</p>
+                                    </div>
+                                    <p class="your-rating-text" id="your-rating-text">' . showRatingText($review->getRating()) . '</p>
+                                </div>
+                            </div>
+                            <p class="review-text">
+                                ' . $review->getComment() . '
+                            </p>
+                        </div>
+                    ';
+                }
             }
         }
     }
 }
 
+// Hiển thị nội dung trang
 $content = '
                 <div class="magazine-post">
                     <img src="/' . $thumbnail . '" alt="thumbnail" class="thumbnail">
@@ -204,22 +246,39 @@ $content = '
                     ' . $reviewHTML . '
                 </div>
 
-                <!-- Modal Panel -->
-                <div id="deleteModal" class="modal">
-                    <form action="/news/delete/' . $postId . '" method="POST" class="modal-content">
-                        <input type="hidden" name="id" value="' . $postId . '">
-                        <h2 class="modal-title">Xóa bài viết?</h2>
-                        <p>Bạn có chắc chắn muốn xóa bài viết này không?<br/>Hành động này không thể hoàn tác.</p>
-                        <br/>
-                        <label for="password" id="lbl-password">Vui lòng nhập mật khẩu</label><br/>
-                        <input type="password" name="password" id="password" placeholder="Nhập mật khẩu để xóa" required>
-                        <div class="modal-buttons">
-                            <button class="btn btn-cancel" onclick="closeModal()">Hủy</button>
-                            <button type="submit" class="btn btn-delete" onclick="closeModal()">Xóa</button>
+                <!-- Modal xác nhận xóa -->
+                <div class="modal-overlay" id="modal-overlay">
+                    <form class="modal-box" method="POST" id="delete-form">
+                        <span class="close-modal" onclick="closeDeleteModal()"><i class="bx bx-x"></i></span>
+                        <h2>Xác nhận xóa</h2>
+                        <p>Bạn có chắc chắn muốn xóa mục này? Nhập mật khẩu để xác nhận.</p>
+                        <input type="password" name="password" placeholder="Nhập mật khẩu..." required>
+                        <div class="modal-actions">
+                        <button type="button" class="btn btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+                        <button type="submit" class="btn btn-delete">Xóa</button>
                         </div>
                     </form>
                 </div>
 
+                <!-- Modal chỉnh sửa review -->
+                <div class="modal-overlay" id="edit-review-overlay">
+                    <form class="modal-box review-form" id="edit-review-form" method="POST">
+                        <span class="close-modal" onclick="closeEditReviewModal()"><i class="bx bx-x"></i></span>
+                        <h2>Chỉnh sửa đánh giá</h2>
+                        <textarea name="review" id="edit-review-text" placeholder="Chỉnh sửa đánh giá của bạn"></textarea>
+                        <div class="review-function">
+                            <div class="review-rating" id="edit-review-stars">
+                                <i class=\'bx bx-star rating-star\'></i>
+                                <i class=\'bx bx-star rating-star\'></i>
+                                <i class=\'bx bx-star rating-star\'></i>
+                                <i class=\'bx bx-star rating-star\'></i>
+                                <i class=\'bx bx-star rating-star\'></i>
+                                <input class="rating" type="number" name="rating" id="edit-rating" min="1" max="5" value="" hidden required>
+                            </div>
+                            <input type="submit" id="edit-review-submit" value="Cập nhật" disabled>
+                        </div>
+                    </form>
+                </div>
 ';
 
 $js = '/assets/js/magazine-post.js';

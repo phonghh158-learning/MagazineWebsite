@@ -101,7 +101,7 @@ class PostModel {
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);
 
         if (!$post) {
-            return ("Không tìm thấy bài viết");
+            throw new Exception("Không tìm thấy bài viết");
         }
 
         $paragraphs = [];
@@ -129,6 +129,7 @@ class PostModel {
             throw new Exception("Không tìm thấy bài viết");
         }
 
+        // Kiểm tra mật khẩu có được nhập không
         if (empty($password)) {
             throw new Exception("Vui lòng nhập mật khẩu");
         }
@@ -138,11 +139,12 @@ class PostModel {
             throw new Exception("Không tìm thấy người dùng");
         }
 
-        if (password_verify($password, $user->getPassword())) {
-            return $this->postRepository->softDelete($id);
-        } else {
+        // Verify password
+        if (!password_verify($password, $user->getPassword())) {
             throw new Exception("Mật khẩu không chính xác");
         }
+
+        return $this->postRepository->softDelete($id);
     }
 
     public function getThumbnailById($id) {

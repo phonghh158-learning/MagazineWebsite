@@ -98,16 +98,29 @@
                     );
                     
                     if (!$post) {
-                        throw new Exception("Không thể tạo bài viết! Kiểm tra model.");
+                        $_SESSION['notify'] = [
+                            'type' => 'success',
+                            'message' => 'Không thể tạo bài viết!'
+                        ];
+                        header("Location: /news");
+                        exit();
                     }
+
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Tạo bài viết thành công! Hãy chờ duyệt!'
+                    ];
         
-                    header("Location: /news");
+                    header("Location: /news/{$id}");
                     exit();
                 }
             } catch (Exception $e) {
-                echo $e->getMessage();
-                error_log("Lỗi createPost: " . $e->getMessage());
-                throw new Exception($e->getMessage());
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/");
+                exit();
             }
         }
 
@@ -138,21 +151,27 @@
                         $thumbnail = trim($_POST['current-thumbnail']) ?? '';
                     }
         
-                    $post = $this->model->updatePost(
+                    $this->model->updatePost(
                         $id, $title, $thumbnail, 
                         $paragraphTitles, $paragraphContents, 
                         $status, $categoryId, $authorId
                     );
-                    
-                    if (!$post) {
-                        throw new Exception("Không thể tạo bài viết! Kiểm tra model.");
-                    }
+
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Cập nhật bài viết thành công!'
+                    ];
         
                     header("Location: /news/{$id}");
                     exit();
                 }
             } catch (Exception $e) {
-                error_log("Lỗi updatePost: " . $e->getMessage());
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/{$id}");
+                exit();
             }
         }
 
@@ -161,10 +180,27 @@
         }
 
         public function softDeletePost($id) {
-            $password = $_POST['password'] ?? '';
-            $this->model->softDeletePost($id, $password);
-            header("Location: /news");
-            exit();
+            try {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $password = $_POST['password'] ?? '';
+                    $this->model->softDeletePost($id, $password);
+
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Xóa bài viết thành công!'
+                    ];
+
+                    header("Location: /news");
+                    exit();
+                }
+            } catch (Exception $e) {
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/{$id}");
+                exit();
+            }
         }
 
         public function searchPost() {
@@ -192,12 +228,21 @@
 
                     $this->reviewModel->createReview($postId, $rating, $review);
 
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Đã thêm đánh giá của bạn!'
+                    ];
+
                     header("Location: /news/{$postId}");
                     exit();
                 }
             } catch (Exception $e) {
-                error_log("Lỗi addReview: " . $e->getMessage());
-                throw new Exception($e->getMessage());
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/{$postId}");
+                exit();
             }
         }
     }
