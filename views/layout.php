@@ -35,8 +35,8 @@
     </div>
     
     <!-- Import Script -->
-    <?php if (isset($js)) { echo '<script src="'. $js .'"></script>'; } ?>
     <script src="/assets/js/script.js"></script>
+    <?php if (isset($js)) { echo '<script src="'. $js .'"></script>'; } ?>
     <!-- Import Show Notication Popup Script -->
     <?php if (!empty($_SESSION['notify'])): ?>
         <script>

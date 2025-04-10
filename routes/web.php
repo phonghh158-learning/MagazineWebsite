@@ -54,5 +54,7 @@ Router::post('news/delete/{id}', [PostController::class,'softDeletePost']);
 Router::get('news/search', [PostController::class,'searchPost']);
 
 Router::post('news/{id}/review/create', [PostController::class,'addReview']);
+Router::post('news/{id}/review/{reviewId}/update', [PostController::class,'updateReview']);
+Router::post('news/{id}/review/{reviewId}/delete', [PostController::class,'deleteReview']);
 
 

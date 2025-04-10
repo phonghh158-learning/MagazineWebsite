@@ -129,10 +129,24 @@ if (isset($_SESSION['user_id'])) {
             //Nếu đã đánh giá -> hiện đánh giá, có nút chỉnh sửa
             $reviewHTML .= '
                 <div class="your-review">
-                    <div class="fn-review" id="fn-review-' . $review->getId() . '" onclick="openModal(\'/news/' . $postId . '/review/update\', \'' . $userReview->getId() . '\')">
+                    <div class="fn-review" id="fn-review-delete" 
+                    onclick="openDeleteReviewModal(
+                        \'' . $postId . '\',
+                        \'' . $userReview->getId() . '\'
+                    )">
+                        <i class=\'bx bx-trash-alt\'></i>
+                    </div>
+                    <div class="fn-review" id="fn-review-update" style="right: "
+                    onclick="openEditReviewModal(
+                        \'' . $postId . '\',
+                        \'' . $userReview->getId() . '\',
+                        \'' . htmlspecialchars($userReview->getComment()) . '\',
+                        \'' . $userReview->getRating() . '\'
+                    )">
                         <i class=\'bx bx-edit\'></i>
                         <p>Chỉnh sửa</p>
                     </div>
+                    <p class="review-author"> ' . $userReview->getAuthorName() . ' - ' . $userReview->getAuthorUsername() . ' </p>
                     <div class="review-rating">
                         ' . showReviewRatingStar($userReview->getRating()) .'
                         <p>&ThickSpace;&ThickSpace;</p>
@@ -246,7 +260,7 @@ $content = '
                     ' . $reviewHTML . '
                 </div>
 
-                <!-- Modal xác nhận xóa -->
+                <!-- Modal xác nhận xóa Post -->
                 <div class="modal-overlay" id="modal-overlay">
                     <form class="modal-box" method="POST" id="delete-form">
                         <span class="close-modal" onclick="closeDeleteModal()"><i class="bx bx-x"></i></span>
@@ -265,20 +279,36 @@ $content = '
                     <form class="modal-box review-form" id="edit-review-form" method="POST">
                         <span class="close-modal" onclick="closeEditReviewModal()"><i class="bx bx-x"></i></span>
                         <h2>Chỉnh sửa đánh giá</h2>
+                        <br/>
                         <textarea name="review" id="edit-review-text" placeholder="Chỉnh sửa đánh giá của bạn"></textarea>
                         <div class="review-function">
                             <div class="review-rating" id="edit-review-stars">
-                                <i class=\'bx bx-star rating-star\'></i>
-                                <i class=\'bx bx-star rating-star\'></i>
-                                <i class=\'bx bx-star rating-star\'></i>
-                                <i class=\'bx bx-star rating-star\'></i>
-                                <i class=\'bx bx-star rating-star\'></i>
+                                <i class=\'bx bx-star rating-star\' id="edit-rating-1"></i>
+                                <i class=\'bx bx-star rating-star\' id="edit-rating-2"></i>
+                                <i class=\'bx bx-star rating-star\' id="edit-rating-3"></i>
+                                <i class=\'bx bx-star rating-star\' id="edit-rating-4"></i>
+                                <i class=\'bx bx-star rating-star\' id="edit-rating-5"></i>
                                 <input class="rating" type="number" name="rating" id="edit-rating" min="1" max="5" value="" hidden required>
                             </div>
                             <input type="submit" id="edit-review-submit" value="Cập nhật" disabled>
                         </div>
                     </form>
                 </div>
+
+                <!-- Modal xác nhận xóa Review -->
+                <div class="modal-overlay" id="delete-review-overlay">
+                    <form class="modal-box" method="POST" id="delete-review-form">
+                        <span class="close-modal" onclick="closeDeleteReviewModal()"><i class="bx bx-x"></i></span>
+                        <h2>Xác nhận xóa đánh giá</h2>
+                        <p>Bạn có chắc chắn muốn xóa đánh giá này? Nhập mật khẩu để xác nhận.</p>
+                        <input type="password" name="password-review-delete" placeholder="Nhập mật khẩu..." required>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-cancel" onclick="closeDeleteReviewModal()">Hủy</button>
+                            <button type="submit" class="btn btn-delete">Xóa</button>
+                        </div>
+                    </form>
+                </div>
+
 ';
 
 $js = '/assets/js/magazine-post.js';

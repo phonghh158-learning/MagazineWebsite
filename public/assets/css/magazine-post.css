@@ -513,3 +513,12 @@ body.dark .write-post-form .submit {
     justify-content: center;
     cursor: pointer;
 }
+
+.your-review .fn-review#fn-review-delete {
+    width: 24px;
+}
+
+.your-review .fn-review#fn-review-update {
+    margin-right: 8px;
+    right: calc(16px + 24px);
+}

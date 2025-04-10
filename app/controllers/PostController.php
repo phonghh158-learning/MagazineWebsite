@@ -245,6 +245,56 @@
                 exit();
             }
         }
+
+        public function updateReview($postId, $reviewId) {
+            try {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $rating = $_POST['rating'];
+                    $review = trim($_POST['review']);
+
+                    $this->reviewModel->updateReview($reviewId, $postId, $_SESSION['user_id'], $rating, $review);
+
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Đánh giá đã được cập nhật!'
+                    ];
+
+                    header("Location: /news/{$postId}");
+                    exit();
+                }
+            } catch (Exception $e) {
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/{$postId}");
+                exit();
+            }
+        }
+
+        public function deleteReview($postId, $reviewId) { 
+            try {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $password = $_POST['password-review-delete'] ?? '';
+                    $this->reviewModel->softDeleteReview($reviewId, $password);
+
+                    $_SESSION['notify'] = [
+                        'type' => 'success',
+                        'message' => 'Đánh giá đã được xóa!'
+                    ];
+
+                    header("Location: /news/{$postId}");
+                    exit();
+                }
+            } catch (Exception $e) {
+                $_SESSION['notify'] = [
+                    'type' => 'error',
+                    'message' => $e->getMessage()
+                ];
+                header("Location: /news/{$postId}");
+                exit();
+            }
+        }
     }
 
 ?>

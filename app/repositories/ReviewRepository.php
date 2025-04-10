@@ -22,6 +22,12 @@
             return parent::create($entity);
         }
 
+        public function updateReview($reviewId, $postId, $userId, $rating, $comment, $createdAt) {
+            $entity = new ReviewEntity($reviewId, $postId, $userId, $rating, $comment, 
+            $createdAt, DateTimeAsia::now(), null);
+            return parent::update($entity);
+        }
+
         public function getTotalReviewsByPostId($postId) {
             try {
                 $query = "SELECT COUNT(*) FROM {$this->table} WHERE post_id = :post_id AND deleted_at IS NULL";
