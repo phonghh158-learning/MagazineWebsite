@@ -135,6 +135,7 @@ if (isset($_SESSION['user_id'])) {
                         \'' . $userReview->getId() . '\'
                     )">
                         <i class=\'bx bx-trash-alt\'></i>
+                        <p>Xóa</p>
                     </div>
                     <div class="fn-review" id="fn-review-update" style="right: "
                     onclick="openEditReviewModal(
@@ -176,9 +177,13 @@ if (isset($_SESSION['user_id'])) {
                 foreach ($reviewsList as $review) {
                     $reviewHTML .= '
                         <div class="your-review">
-                            <div class="fn-review" id="fn-review-' . $review->getId() . '" onclick="openModal(\'/news/' . $postId . '/review/softDelete\', \'' . $review->getId() . '\')">
-                                <i class=\'bx bx-hide\'></i>
-                                <p>Ẩn đánh giá</p>
+                            <div class="fn-review" id="fn-review-delete" 
+                            onclick="openDeleteReviewModal(
+                                \'' . $postId . '\',
+                                \'' . $review->getId() . '\'
+                            )">
+                                <i class=\'bx bx-trash-alt\'></i>
+                                <p>Xóa</p>
                             </div>
                             <p class="review-author"> ' . $review->getAuthorName() . ' - ' . $review->getAuthorUsername() . ' </p>
                             <div class="review-rating">

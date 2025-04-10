@@ -15,7 +15,7 @@ foreach ($categories as $category) {
 
 $content = '
     <form class="write-post-form" action="/news/create" method="POST" enctype="multipart/form-data">
-        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept=".jpg, .jpeg, .png" required>
+        <input class="thumbnail" type="file" id="thumbnail" name="thumbnail" accept=".jpg, .jpeg, .png, .gif" required>
         <select name="category_id" id="category" class="category" required>
             <option value="" disabled selected>Chọn danh mục</option>
             ' .$categoryOptions. '

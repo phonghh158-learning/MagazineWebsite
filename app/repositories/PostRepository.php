@@ -74,11 +74,25 @@
             }
         }
 
-        public function getPostByStatus($status) {
+        public function getPostsByStatus($status) {
             try {
                 $query = "SELECT * FROM {$this->table} WHERE status = :status AND deleted_at IS NULL";
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['status' => $status]);
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        public function getPostsByStatusPaginate($status, $limit, $offset) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE status = :status AND deleted_at IS NULL ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute(['status' => $status, 'limit' => $limit, 'offset' => $offset]);
                 
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);

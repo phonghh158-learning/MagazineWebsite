@@ -1,8 +1,9 @@
 const content = document.getElementById('content');
 const addParaButton = document.getElementById('add-paragraph');
 const deleteParaButton = document.getElementById('delete-paragraph');
+const paragraphs = document.getElementsByClassName('paragraph');
 
-let paragraphNumber = 1;
+let paragraphNumber = paragraphs.length;
 
 setVisibilityDeleteButton(paragraphNumber);
 

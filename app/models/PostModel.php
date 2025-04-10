@@ -47,6 +47,7 @@ class PostModel {
         );
     }
 
+    // Get Posts List
     public function getAllPosts(): array {
         $posts = $this->postRepository->getAll();
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
@@ -56,11 +57,24 @@ class PostModel {
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
+    // Get Post By Status
+    public function getPostsByStatus($status) {
+        $posts = $this->postRepository->getPostsByStatus($status);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    public function getPostsByStatusPaginate($status, $limit, $offset) {
+        $posts = $this->postRepository->getPostsByStatusPaginate($status, $limit, $offset);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    // Get Post By Id
     public function getPostById($id) {
         $post = $this->postRepository->getById($id);
         return $post ? $this->mapToViewModel($post) : null;
     }
 
+    // Get Posts By Category
     public function getPostsByCategory($categoryId) {
         $posts = $this->postRepository->getPostsByCategory($categoryId);
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
@@ -71,6 +85,7 @@ class PostModel {
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
+    // Create Post
     public function createPost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $categoryId, $authorId) {
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);
         
@@ -95,13 +110,19 @@ class PostModel {
         );
     }
 
-    public function updatePost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $status, $categoryId, $authorId) {
+    public function updatePost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $categoryId, $authorId) {
         $post = $this->postRepository->getById($id);
         
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);
 
         if (!$post) {
             throw new Exception("Không tìm thấy bài viết");
+        }
+
+        if ($_SESSION['user_role'] !== 'admin') {
+            $status = 'pending';
+        } else {
+            $status = 'public';
         }
 
         $paragraphs = [];

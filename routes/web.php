@@ -42,6 +42,7 @@ Router::post('category/delete/{id}', [CategoryController::class,'deleteCategory'
 Router::get('news', [PostController::class,'index']);
 Router::get('news/{id}', [PostController::class,'show']);
 Router::get('news/category/{id}', [PostController::class,'getPostsByCategory']);
+Router::get('news/status/{status}', [PostController::class,'getPostsByStatus']);
 
 Router::get('news/create', [PostController::class,'create']);
 Router::post('news/create', [PostController::class,'createPost']);

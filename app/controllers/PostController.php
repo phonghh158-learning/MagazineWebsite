@@ -29,10 +29,10 @@
 
             $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 
-            $totalPosts = count($this->model->getAllPosts());
+            $totalPosts = count($this->model->getPostsByStatus('public'));
             $limit = 6;
             $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
-            $posts = $this->model->getAllPostsPaginate($limit, $offset);
+            $posts = $this->model->getPostsByStatusPaginate('public', $limit, $offset);
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
@@ -60,6 +60,18 @@
             $limit = 6;
             $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
             $posts = $this->model->getPostsByCategoryPaginate($id, $limit, $offset);
+            require_once __DIR__ . '/../../views/pages/news/index.php';
+        }
+
+        public function getPostsByStatus($status): void {
+            $categories = $this->categoryModel->getCategories();
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+            
+            $totalPosts = count($this->model->getPostsByStatus('pending'));
+            $limit = 6;
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+            $posts = $this->model->getPostsByStatusPaginate('pending', $limit, $offset);
+
             require_once __DIR__ . '/../../views/pages/news/index.php';
         }
 
@@ -154,7 +166,7 @@
                     $this->model->updatePost(
                         $id, $title, $thumbnail, 
                         $paragraphTitles, $paragraphContents, 
-                        $status, $categoryId, $authorId
+                        $categoryId, $authorId
                     );
 
                     $_SESSION['notify'] = [

@@ -24,15 +24,15 @@
                 }
         
                 // Chỉ cho phép một số định dạng ảnh
-                $allowedTypes = ["jpg", "jpeg", "png"];
+                $allowedTypes = ["jpg", "jpeg", "png", "gif"];
                 if (!in_array($imageType, $allowedTypes)) {
-                    throw new Exception("Chỉ chấp nhận file PNG, JPG, hoặc JPEG.");
+                    throw new Exception("Chỉ chấp nhận file PNG, JPG, JPEG hoặc GIF.");
                 }
         
                 // Kiểm tra MIME type để tránh upload file giả mạo
                 $mimeType = mime_content_type($file["tmp_name"]);
                 if (!str_starts_with($mimeType, "image/")) {
-                    throw new Exception("Chiềp nhận file PNG, JPG, hoặc JPEG.");
+                    throw new Exception("Chỉ chấp nhận file PNG, JPG, JPEG hoặc GIF.");
                 }
         
                 // Upload file

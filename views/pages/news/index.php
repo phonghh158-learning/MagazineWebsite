@@ -18,6 +18,17 @@ foreach ($categories as $category) {
     ';
 }
 
+if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin') {
+    $categoriesHTML .= '
+        <div class="item">
+            <a href="/news/status/pending">
+                <i class="bx bx-hide"></i>
+                Chờ duyệt
+            </a>
+        </div>
+    ';
+}
+
 $paginationHTML = '';
 $postHTML = '';
 if (empty($posts)) {
@@ -60,13 +71,6 @@ if (empty($posts)) {
         </form>
     ';
 }
-
-
-if (isset($_SESSION['user_id'])) {
-    
-}
-
-
 
 $content = '
                     <form class="search-box" action="/news/search" method="GET">
