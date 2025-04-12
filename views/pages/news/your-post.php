@@ -1,31 +1,7 @@
 <?php
 
-$title = "Bài báo";
+$title = "Tin bài của bạn";
 $css = '/assets/css/magazine-list.css';
-
-$categoriesHTML = '';
-foreach ($categories as $category) {
-    $categoryName = $category->getName();
-    $categoryIcon = $category->getIcon();
-    $categoriesHTML .= '
-        <div class="item">
-            <a href="/news/category/' . $category->getId() . '">
-                ' . $categoryIcon . $categoryName . '
-            </a>
-        </div>
-    ';
-}
-
-if (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin') {
-    $categoriesHTML .= '
-        <div class="item">
-            <a href="/news/status/pending">
-                <i class="bx bx-hide"></i>
-                Chờ duyệt
-            </a>
-        </div>
-    ';
-}
 
 $paginationHTML = '';
 $postHTML = '';
@@ -70,23 +46,27 @@ if (empty($posts)) {
     ';
 }
 
-$content = '
-                    <form class="search-box" action="/news/search" method="GET">
-                        <input type="text" id="search-input" name="search-input" placeholder="Tìm kiếm tiêu đề bài báo">
-                        <i class=\'bx bx-search icon\'></i>
-                        <button type="submit">
-                            <i class=\'bx bx-search\'></i>
-                        </button>
-                    </form>
-                    
-                    <section id="category">
-                        <div class="category-list">
+$content = '                    
+                    <section id="filter">
+                        <div class="title"><p>Bài viết của bạn</p></div>
+                        <div class="filter-list">
                             <div class="item">
-                                <a href="/news">
+                                <a href="/your-posts">
                                     <i class=\'bx bx-list-ul\'></i>Tất cả
                                 </a>
                             </div>
-                            ' . $categoriesHTML . '
+                            <div class="item">
+                                <a href="/your-posts/public">
+                                    <i class="bx bx-hide"></i>
+                                    Đã duyệt
+                                </a>
+                            </div>
+                            <div class="item">
+                                <a href="/your-posts/pending">
+                                    <i class="bx bx-hide"></i>
+                                    Chờ duyệt
+                                </a>
+                            </div>
                         </div>
                     </section>
                     <br><br>

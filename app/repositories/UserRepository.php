@@ -15,13 +15,43 @@
         }
 
         public function createUser($id, $username, $fullname, $email, $password) {
-            $entity = new UserEntity($id, $username, $fullname, $email, null, $password, 'user', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
+            $entity = new UserEntity(
+                $id, $username, $fullname, $email, 
+                null, $password, 'user', null, 
+                null, 'active', null, 
+                DateTimeAsia::now(), DateTimeAsia::now(), null);
             return parent::create($entity);
         }
 
         public function createAdmin($id, $username, $fullname, $email, $password) {
-            $entity = new UserEntity($id, $username, $fullname, $email, null, $password, 'admin', null, null, 'active', null, DateTimeAsia::now(), DateTimeAsia::now(), null);
+            $entity = new UserEntity(
+                $id, $username, $fullname, $email, 
+                null, $password, 'admin', null, 
+                null, 'active', null, 
+                DateTimeAsia::now(), DateTimeAsia::now(), null);
             return parent::create($entity);
+        }
+
+        public function updateAvatar($id, $avatar) {
+            try {
+                $query = "UPDATE {$this->table} SET avatar = :avatar, updated_at = :updated_at WHERE id = :id";
+                $stmt = $this->pdo->prepare($query);
+                return $stmt->execute(['avatar' => $avatar, 'updated_at' => DateTimeAsia::now()->format('Y-m-d H:i:s'), 'id' => $id]);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return false;
+            }
+        }
+
+        public function updateInformation($id, $fullname, $username, $email) {
+            try {
+                $query = "UPDATE {$this->table} SET fullname = :fullname, username = :username, email = :email, updated_at = :updated_at WHERE id = :id";
+                $stmt = $this->pdo->prepare($query);
+                return $stmt->execute(['fullname' => $fullname, 'username' => $username, 'email' => $email, 'updated_at' => DateTimeAsia::now()->format('Y-m-d H:i:s'), 'id' => $id]);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return false;
+            } 
         }
 
         public function getUserByEmail(string $email) {
@@ -82,10 +112,10 @@
             try {
                 $query = "UPDATE {$this->table} SET password = :password WHERE id = :id";
                 $stmt = $this->pdo->prepare($query);
-                $stmt->execute(['password' => $password, 'id' => $userId]);
+                return $stmt->execute(['password' => $password, 'id' => $userId]);
             } catch (PDOException $e) {
                 error_log("Error: " . $e->getMessage());
-                throw $e;
+                return false;
             }
         }
     }

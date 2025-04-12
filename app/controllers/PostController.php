@@ -111,7 +111,7 @@
                     
                     if (!$post) {
                         $_SESSION['notify'] = [
-                            'type' => 'success',
+                            'type' => 'error',
                             'message' => 'Không thể tạo bài viết!'
                         ];
                         header("Location: /news");
@@ -306,6 +306,30 @@
                 header("Location: /news/{$postId}");
                 exit();
             }
+        }
+
+        public function getYourPosts() {
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+
+            $limit = 9;
+            $totalPosts = count($this->model->getPostsByAuthor($_SESSION['user_id']));
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+
+            $posts = $this->model->getPostsByAuthorPaginate($_SESSION['user_id'], $limit, $offset);
+
+            require_once __DIR__ . '/../../views/pages/news/your-post.php';
+        }
+
+        public function getYourPostsWithStatus($status) {
+            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+            
+            $limit = 9;
+            $totalPosts = count($this->model->getPostsByStatusAndAuthor($status, $_SESSION['user_id']));
+            $offset = Caculate::paginateOffset($totalPosts, $currentPage, $limit);
+
+            $posts = $this->model->getPostsByStatusAndAuthorPaginate($status, $_SESSION['user_id'], $limit, $offset);
+
+            require_once __DIR__ . '/../../views/pages/news/your-post.php';
         }
     }
 

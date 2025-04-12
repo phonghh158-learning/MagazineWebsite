@@ -32,6 +32,10 @@ class CategoryModel {
         return $category;
     }
 
+    public function getTopCategories($limit) {
+        return $this->repository->getTopCategories($limit);
+    }
+
     public function createCategory($name, $description, $icon) {
         if (empty($name)) {
             throw new Exception("Tên không được để trống");
@@ -70,5 +74,7 @@ class CategoryModel {
         }
     
         return $this->repository->delete($id);
-    }    
+    }
+
+
 }

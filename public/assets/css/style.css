@@ -46,7 +46,46 @@ a {
 li {
     list-style: none;
 }
-    
+
+/* Scrollbar chung */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Track - nền */
+::-webkit-scrollbar-track {
+    background-color: var(--secondary-color); /* light mode */
+    border-radius: 4px 0 0 4px;
+}
+
+/* Thumb - phần kéo */
+::-webkit-scrollbar-thumb {
+    background-color: #422520;
+    border-radius: 4px 0 0 4px;
+    border: 2px solid var(--secondary-color);
+}
+
+/* Hover thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #5b342e;
+}
+
+/* Dark mode */
+body.dark ::-webkit-scrollbar-track {
+    background-color: var(--text-color);
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border: 2px solid var(--text-color);
+}
+
+body.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #c98f8f;
+}
+
+
+/* CONTAINER */
 .container {
     position: relative;
     display: flex;

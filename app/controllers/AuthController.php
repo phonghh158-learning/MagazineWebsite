@@ -34,16 +34,30 @@ class AuthController {
                 ];
 
                 $user = $this->model->registerUser($userData);
-                if ($user) {
-                    header("Location: /login");
+                if (!$user) {
+                    $_SESSION['notify'] = [
+                        'type' => 'error',
+                        'message' => 'Đăng ký thất bại!'
+                    ];
+                    header("Location: /register");
                     exit();
-                } else {
-                    throw new Exception("Đăng ký thất bại!");
                 }
+                
+                $_SESSION['notify'] = [
+                    'type' => 'success',
+                    'message' => 'Đăng ký thành công!'
+                ];
+    
+                header("Location: /login");
+                exit();
             }
         } catch (Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /register");
+            exit();
         }
     }
 
@@ -57,27 +71,50 @@ class AuthController {
                 ];
 
                 $user = $this->model->loginUser($credentials);
-                if ($user) {
-                    header("Location: /");
+                if (!$user) {
+                    $_SESSION['notify'] = [
+                        'type' => 'error',
+                        'message' => 'Đăng nhập thất bại!'
+                    ];
+                    header("Location: /login");
                     exit();
-                } else {
-                    throw new Exception("Email hoặc mật khẩu không chính xác!");
                 }
+                
+                $_SESSION['notify'] = [
+                    'type' => 'success',
+                    'message' => 'Đăng nhập thành công!'
+                ];
+    
+                header("Location: /");
+                exit();
             }
         } catch (Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            return false;
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /register");
+            exit();
         }
     }
 
     public function logout() {
         try {
             $this->model->logoutUser();
+            $_SESSION['notify'] = [
+                'type' => 'success',
+                'message' => 'Đã đăng xuất!'
+            ];
+
             header("Location: /");
             exit();
         } catch (Exception $e) {
-            error_log("Error: " . $e->getMessage());
-            echo $e->getMessage();
+            $_SESSION['notify'] = [
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ];
+            header("Location: /");
+            exit();
         }
     }
 

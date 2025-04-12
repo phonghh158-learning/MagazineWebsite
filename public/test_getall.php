@@ -8,19 +8,16 @@ use App\models\CategoryModel;
 use Helper\Caculate;
 use Helper\DateTimeAsia;
 
-$repo = new CategoryRepository();
+$model = new CategoryModel();
+$res = $model->getTopCategories(4);
 
-$categories = $repo->getAll();
-
-foreach ($categories as $category) {
+foreach ($res as $category) {
     echo $category->getName() . "<br>";
 }
 
-$model = new CategoryModel();
-$res = $model->updateCategory("bdfabd14-d7e8-44cf-baea-9fc2a9103461", "Danh muc TESTEST", "<i class='bx bx-bowl-rice'></i>", "Description TESTEST");
+$postModel = new \App\models\PostModel();
+$posts = $postModel->getPostsByStatus('public');
 
-if ($res) {
-    echo "Thanh cong";
-}
-
+$firstPost = array_slice($posts, 0, 1);
+var_dump($firstPost[0]->getParagraphs());
 ?>

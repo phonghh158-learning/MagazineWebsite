@@ -16,31 +16,33 @@ class UserModel {
     //Authentication
 
     private function validateUserData(array $data) {
-        $errorText = [];
-
         if (empty($data['username']) || empty($data['email']) || empty($data['password']) || empty($data['confirm_password'])) {
-            $errorText[] = "Vui lòng nhập đầy đủ thông tin!";
+            throw new Exception("Vui lòng nhập đầy đủ thông tin!");
         }
         
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errorText[] = "Email không hợp lệ!";
+            throw new Exception("Email không hợp lệ!");
         }
         
         if ($this->repository->getUserByEmail($data['email'])) {
-            $errorText[] = "Email đã được sử dụng!";
+            throw new Exception("Email đã được sử dụng!");
         }
         
         if ($data['password'] !== $data['confirm_password']) {
-            $errorText[] = "Mật khẩu nhập lại không khớp!";
-        }
-        
-        if (!empty($errorText)) {
-            throw new Exception(implode("\n", $errorText));
+            throw new Exception("Mật khẩu nhập lại không khớp!");
         }
     }
 
+    private function validatePasswordStrength($password) {
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $password)) {
+            throw new Exception("Mật khẩu phải có ít nhất 8 ký tự, gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
+        }
+    }
+    
+
     public function registerUser(array $data) {
         $this->validateUserData($data);
+        $this->validatePasswordStrength($data['password']);
         
         $hashedPassword = password_hash($data['password'], PASSWORD_ARGON2ID);
         
@@ -98,8 +100,44 @@ class UserModel {
         }
     }
 
-    // GET SET NORMAL
+    //Profile
     public function getUserById($id) {
         return $this->repository->getById($id);
+    }
+
+    public function updateAvatar($id, $avatar) {
+        return $this->repository->updateAvatar($id, $avatar);
+    }
+
+    public function updateInformation($id, $fullname, $username, $email) {
+        if (empty($username) || empty($email) || empty($fullname)) {
+            throw new Exception("Vui lòng nhập đầy đủ thông tin!");
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Email không hợp lệ!");
+        }
+
+        return $this->repository->updateInformation($id, $fullname, $username, $email);
+    }
+
+    public function updatePassword($id, $currentPassword, $password, $confirmPassword) {
+        if (empty($password) || empty($confirmPassword) || empty($currentPassword)) {
+            throw new Exception("Vui lòng nhập đầy đủ mật khẩu!");
+        }
+
+        if (!password_verify($currentPassword, $this->repository->getById($id)->getPassword())) {
+            throw new Exception("Mật khẩu hiện tại không chính xác");
+        }
+
+        if ($password !== $confirmPassword) {
+            throw new Exception("Mật khẩu nhập lại không khớp!");
+        }
+
+        $this->validatePasswordStrength($password);
+        
+        $hashedPassword = password_hash($password, PASSWORD_ARGON2ID);
+
+        return $this->repository->updatePassword($id, $hashedPassword);
     }
 }

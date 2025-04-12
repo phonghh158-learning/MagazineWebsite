@@ -34,7 +34,7 @@
 
         public function getPostsByCategory($categoryId) {
             try {
-                $query = "SELECT * FROM {$this->table} WHERE category_id = :category_id AND status = 'public' AND deleted_at IS NULL";
+                $query = "SELECT * FROM {$this->table} WHERE category_id = :category_id AND status = 'public' AND deleted_at IS NULL ORDER BY created_at DESC";
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['category_id' => $categoryId]);
                 
@@ -60,9 +60,9 @@
             }
         }
 
-        public function getPostByAuthor($authorId) {
+        public function getPostsByAuthor($authorId) {
             try {
-                $query = "SELECT * FROM {$this->table} WHERE author_id = :author_id AND deleted_at IS NULL";
+                $query = "SELECT * FROM {$this->table} WHERE author_id = :author_id AND deleted_at IS NULL ORDER BY created_at DESC";
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['author_id' => $authorId]);
                 
@@ -74,9 +74,51 @@
             }
         }
 
+        public function getPostsByAuthorPaginate($authorId, $limit, $offset) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE author_id = :author_id AND deleted_at IS NULL ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute(['author_id' => $authorId, 'limit' => $limit, 'offset' => $offset]);
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        public function getPostsByStatusAndAuthor($status, $authorId) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE status = :status AND author_id = :author_id AND deleted_at IS NULL ORDER BY created_at";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute(['status' => $status, 'author_id' => $authorId]);
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
+        public function getPostsByStatusAndAuthorPaginate($status, $authorId, $limit, $offset) {
+            try {
+                $query = "SELECT * FROM {$this->table} WHERE status = :status AND author_id = :author_id AND deleted_at IS NULL ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute(['status' => $status, 'author_id' => $authorId, 'limit' => $limit, 'offset' => $offset]);
+                
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Error: " . $e->getMessage());
+                return [];
+            }
+        }
+
         public function getPostsByStatus($status) {
             try {
-                $query = "SELECT * FROM {$this->table} WHERE status = :status AND deleted_at IS NULL";
+                $query = "SELECT * FROM {$this->table} WHERE status = :status AND deleted_at IS NULL ORDER BY created_at DESC";
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['status' => $status]);
                 

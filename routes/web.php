@@ -12,12 +12,11 @@ use App\controllers\HomeController;
 use App\controllers\AuthController;
 use App\controllers\CategoryController;
 use App\controllers\PostController;
+use App\controllers\UserController;
 use Core\Router;
 
 //TEST
 Router::get('', [new HomeController, 'index']);
-Router::get('about', [new HomeController, 'about']);
-Router::get('contact', [new HomeController, 'contact']);
 
 //Authentication
 Router::get('register', [AuthController::class, 'showRegisterForm']);
@@ -58,4 +57,13 @@ Router::post('news/{id}/review/create', [PostController::class,'addReview']);
 Router::post('news/{id}/review/{reviewId}/update', [PostController::class,'updateReview']);
 Router::post('news/{id}/review/{reviewId}/delete', [PostController::class,'deleteReview']);
 
+Router::get('your-posts', [PostController::class,'getYourPosts']);
+Router::get('your-posts/{status}', [PostController::class,'getYourPostsWithStatus']);
 
+//Profile
+Router::get('profile', [UserController::class,'index']);
+Router::post('profile/update/avatar', [UserController::class,'updateAvatar']);
+Router::post('profile/update/information', [UserController::class,'updateInformation']);
+
+Router::get('profile/change-password', [UserController::class,'changePassword']);
+Router::post('profile/update/password', [UserController::class,'updatePassword']);

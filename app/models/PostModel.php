@@ -85,6 +85,28 @@ class PostModel {
         return array_map(fn($post) => $this->mapToViewModel($post), $posts);
     }
 
+    // Get Posts By Author
+    public function getPostsByAuthor($authorId) {
+        $posts = $this->postRepository->getPostsByAuthor($authorId);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    public function getPostsByAuthorPaginate($authorId, $limit, $offset) {
+        $posts = $this->postRepository->getPostsByAuthorPaginate($authorId, $limit, $offset);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    // Get Posts By Status And Author
+    public function getPostsByStatusAndAuthor($status, $authorId) {
+        $posts = $this->postRepository->getPostsByStatusAndAuthor($status, $authorId);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
+    public function getPostsByStatusAndAuthorPaginate($status, $authorId, $limit, $offset) {
+        $posts = $this->postRepository->getPostsByStatusAndAuthorPaginate($status, $authorId, $limit, $offset);
+        return array_map(fn($post) => $this->mapToViewModel($post), $posts);
+    }
+
     // Create Post
     public function createPost($id, $title, $thumbnail, $paragraphTitles, $paragraphContents, $categoryId, $authorId) {
         $this->validatePost($title, $thumbnail, $paragraphTitles, $paragraphContents);

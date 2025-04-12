@@ -6,6 +6,9 @@
     use App\entities\CategoryEntity;
     use Ramsey\Uuid\Uuid;
     use Helper\DateTimeAsia;
+    use Core\Mapper;
+    use PDO;
+    use PDOException;
     use Exception;
 
     class CategoryRepository extends BaseRepository {
@@ -26,6 +29,25 @@
             return parent::update($entity);
         }
         
+        public function getTopCategories($limit) {
+            try {
+                $sql = " SELECT c.*, COUNT(p.id) AS post_count
+                    FROM {$this->table} c
+                    LEFT JOIN magazine_posts p ON p.category_id = c.id
+                    GROUP BY c.id
+                    ORDER BY post_count DESC
+                    LIMIT :limit
+                ";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute(['limit' => $limit]);
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return array_map(fn($item) => Mapper::DataToEntity($this->entityClass, $item), $data);
+            } catch (PDOException $e) {
+                error_log("Lỗi lấy top danh mục: " . $e->getMessage());
+                return [];
+            }
+        }
     }
 
 ?>
