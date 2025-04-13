@@ -36,7 +36,7 @@ foreach ($postParagraphs as $paragraph) {
 
 // Hiển thị chức năng nếu bạn là admin hoặc người tạo bài viết
 $actionHTML = '';
-if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id'])
+if ((isset($_SESSION['user_id']) && $post->getAuthorId() == $_SESSION['user_id'] && $postStatus == 'pending')
     || (isset($_SESSION['user_id']) && $_SESSION['user_role'] == 'admin')
     ) {
     $actionHTML = '
